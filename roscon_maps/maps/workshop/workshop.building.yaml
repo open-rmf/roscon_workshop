@@ -21,7 +21,7 @@ levels:
       - [38, 41, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, main_door_left], plugin: [1, none], right_left_ratio: [3, 1], type: [1, double_hinged]}]
       - [47, 48, {motion_axis: [1, end], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, waiting_room_door], plugin: [1, none], right_left_ratio: [3, 1], type: [1, hinged]}]
       - [64, 65, {motion_axis: [1, end], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, side_room_door], plugin: [1, none], right_left_ratio: [3, 1], type: [1, hinged]}]
-      - [70, 66, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, "null"], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, double_hinged]}]
+      - [70, 66, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, bottom_stairs_door], plugin: [1, "null"], right_left_ratio: [3, 1], type: [1, double_hinged]}]
     drawing:
       filename: conference_room_b1.png
     elevation: 0
