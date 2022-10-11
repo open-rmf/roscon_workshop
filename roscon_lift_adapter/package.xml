@@ -3,9 +3,9 @@
 <package format="3">
   <name>roscon_lift_adapter</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="TODO@TODO.TODO">TODO</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Example lift adapter to be used with rmf_demos simulations</description>
+  <maintainer email="luca@openrobotics.org">Luca Della Vedova</maintainer>
+  <license>Apache 2.0</license>
 
   <exec_depend>rmf_lift_msgs</exec_depend>
 

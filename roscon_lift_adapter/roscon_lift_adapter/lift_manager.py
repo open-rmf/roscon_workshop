@@ -44,15 +44,15 @@ class Response(BaseModel):
     msg: str
 
 '''
-    The SimulatedLift class simulates a bridge between the lift API, that
+    The LiftManager class simulates a bridge between the lift API, that
     depends on the vendor and could be for example REST based, and the
     simulated lifts that operate using ROS2 messages.
     Users can use this lift to validate their lift adapter in simulation
 '''
-class SimulatedLift(Node):
+class LiftManager(Node):
 
     def __init__(self, lifts, namespace='sim'):
-        super().__init__('simulated_lift')
+        super().__init__('lift_manager')
 
         self.lift_states = {}
         for lift in lifts:
@@ -130,8 +130,8 @@ class SimulatedLift(Node):
 def main(argv=sys.argv):
     args_without_ros = rclpy.utilities.remove_ros_args(argv)
     parser = argparse.ArgumentParser(
-        prog='simulated_lift',
-        description='Simulation lift bridge')
+        prog='lift_manager',
+        description='Demo lift manager')
     parser.add_argument('-c', '--config', required=True, type=str)
     args = parser.parse_args(args_without_ros[1:])
 
@@ -139,7 +139,7 @@ def main(argv=sys.argv):
         config = yaml.safe_load(f)
 
     rclpy.init()
-    node = SimulatedLift(config['lifts'])
+    node = LiftManager(config['lifts'])
 
     spin_thread = threading.Thread(target=rclpy.spin, args=(node,))
     spin_thread.start()
