@@ -58,19 +58,22 @@ class LiftAPI:
 
     def lift_state(self, lift_name) -> Optional[dict]:
         ''' Returns the lift state or None if the query failed'''
-        response = requests.get(self.prefix +
-                f'/open-rmf/demo-lift/lift_state?lift_name={lift_name}',
-                timeout=self.timeout)
-        print(response)
+        try:
+            response = requests.get(self.prefix +
+                    f'/open-rmf/demo-lift/lift_state?lift_name={lift_name}',
+                    timeout=self.timeout)
+        except Exception as err:
+            self.logger.info(f'{err}')
+            return None
         if response.status_code != 200 or response.json()['success'] is False:
             return None
         return response.json()['data']
 
-    def command_lift(self, lift_name, floor: str) -> bool:
+    def command_lift(self, lift_name, floor: str, door_state: int) -> bool:
         ''' Sends the lift cabin to a specific floor and opens all available
             doors for that floor. Returns True if the request was sent out
             successfully, False otherwise'''
-        data = {'floor': floor}
+        data = {'floor': floor, 'door_state': door_state}
         response = requests.post(self.prefix +
                 f'/open-rmf/demo-lift/lift_request?lift_name={lift_name}',
                 timeout=self.timeout,

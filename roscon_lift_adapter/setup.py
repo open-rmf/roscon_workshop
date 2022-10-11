@@ -1,3 +1,5 @@
+import os
+from glob import glob
 from setuptools import setup
 
 package_name = 'roscon_lift_adapter'
@@ -11,6 +13,8 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name, ['config/sim_config.yaml']),
+        (os.path.join('share', package_name, 'launch'),
+            glob('launch/*.launch.xml')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -21,7 +25,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'roscon_lift_adapter = roscon_lift_adapter.roscon_lift_adapter:main',
+            'lift_adapter = roscon_lift_adapter.lift_adapter:main',
             'lift_manager = roscon_lift_adapter.lift_manager:main'
         ],
     },

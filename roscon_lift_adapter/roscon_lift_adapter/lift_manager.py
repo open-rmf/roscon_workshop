@@ -37,6 +37,7 @@ app = FastAPI()
 
 class Request(BaseModel):
     floor: str
+    door_state: int
 
 class Response(BaseModel):
     data: Optional[dict] = None
@@ -114,7 +115,7 @@ class LiftManager(Node):
             req.lift_name = lift_name
             req.request_time = now.to_msg()
             req.request_type = req.REQUEST_AGV_MODE
-            req.door_state = req.DOOR_OPEN
+            req.door_state = floor.door_state
             req.destination_floor = floor.floor
             req.session_id = req.lift_name + '-' + str(now)
 

@@ -42,12 +42,7 @@ class RosconLiftAdapter(Node):
         self.lift_api = LiftAPI(self.lift_config, self.get_logger())
         for lift in config['lifts']:
             self.lift_requests[lift] = None
-            state = self._lift_state(lift)
-            if state is None:
-                self.get_logger().error('Failed initilize lift state for lift '
-                        f'{lift}')
-                sys.exit(1)
-            self.lift_states[lift] = state
+            self.lift_states[lift] = self._lift_state(lift)
 
         self.lift_state_pub = self.create_publisher(
             LiftState,
@@ -66,13 +61,11 @@ class RosconLiftAdapter(Node):
         new_states = {}
         for lift_name, lift_state in self.lift_states.items():
             new_state = self._lift_state(lift_name)
+            new_states[lift_name] = new_state
             if new_state is None:
                 self.get_logger().error(
-                    'Unable to get new state from lift {}'.format(self.lift_guid))
+                    f'Unable to get new state from lift {lift_name}')
                 continue
-            new_states[lift_name] = new_state
-            print("New state t is " + str(new_state.lift_time))
-            print("Old state t is " + str(lift_state.lift_time))
 
             lift_request = self.lift_requests[lift_name]
             # No request to consider
@@ -129,18 +122,20 @@ class RosconLiftAdapter(Node):
             return
 
         lift_state = self.lift_states[msg.lift_name]
+        '''
         if self.lift_requests[msg.lift_name] is not None:
             self.get_logger().info(
                 'Lift is currently busy with another request, try again later.')
             return
 
+        '''
         if lift_state is not None and \
                 msg.destination_floor not in lift_state.available_floors:
             self.get_logger().info(
                 'Floor {} not available.'.format(msg.destination_floor))
             return
 
-        if not self.lift_api.command_lift(msg.lift_name, msg.destination_floor):
+        if not self.lift_api.command_lift(msg.lift_name, msg.destination_floor, msg.door_state):
             self.get_logger().error(
                 f'Failed to send lift to {msg.destination_floor}.')
             return
