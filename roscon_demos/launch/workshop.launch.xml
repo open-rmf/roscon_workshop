@@ -1,0 +1,22 @@
+<?xml version='1.0' ?>
+
+<launch>
+  <arg name="use_sim_time" default="false"/>
+
+  <!-- Common launch -->
+  <include file="$(find-pkg-share rmf_demos)/common.launch.xml">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="viz_config_file" value ="$(find-pkg-share roscon_demos)/include/workshop.rviz"/>
+    <arg name="config_file" value="$(find-pkg-share roscon_maps)/workshop/workshop.building.yaml"/>
+  </include>
+
+  <!-- TinyRobot fleet adapter -->
+  <group>
+    <include file="$(find-pkg-share rmf_demos_fleet_adapter)/launch/fleet_adapter.launch.xml">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="nav_graph_file" value="$(find-pkg-share roscon_maps)/maps/workshop/nav_graphs/0.yaml" />
+      <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml"/>
+    </include>
+  </group>
+
+</launch>
