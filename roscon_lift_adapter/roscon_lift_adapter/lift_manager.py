@@ -114,6 +114,7 @@ class LiftManager(Node):
             req.lift_name = lift_name
             req.request_time = now.to_msg()
             req.request_type = req.REQUEST_AGV_MODE
+            req.door_state = req.DOOR_OPEN
             req.destination_floor = floor.floor
             req.session_id = req.lift_name + '-' + str(now)
 

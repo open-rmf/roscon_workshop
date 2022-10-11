@@ -63,24 +63,28 @@ class RosconLiftAdapter(Node):
         self.get_logger().info('Running RosconLiftAdapter')
 
     def update_callback(self):
+        new_states = {}
         for lift_name, lift_state in self.lift_states.items():
             new_state = self._lift_state(lift_name)
             if new_state is None:
                 self.get_logger().error(
                     'Unable to get new state from lift {}'.format(self.lift_guid))
-                return
-            lift_state = new_state
+                continue
+            new_states[lift_name] = new_state
+            print("New state t is " + str(new_state.lift_time))
+            print("Old state t is " + str(lift_state.lift_time))
 
             lift_request = self.lift_requests[lift_name]
             # No request to consider
             if lift_request is None:
-                return
+                continue
 
             # If all is done, set request to None
             if lift_request.destination_floor == \
-                    lift_state.current_floor and \
-                    lift_state.door_state == LiftState.DOOR_OPEN:
+                    new_state.current_floor and \
+                    new_state.door_state == LiftState.DOOR_OPEN:
                 lift_request = None
+        self.lift_states = new_states
 
     def _lift_state(self, lift_name) -> Optional[LiftState]:
         new_state = LiftState()
@@ -109,7 +113,7 @@ class RosconLiftAdapter(Node):
                     LiftRequest.REQUEST_END_SESSION:
                 new_state.session_id = ''
             else:
-                new_state.session_id = self.request.session_id
+                new_state.session_id = lift_request.session_id
         return new_state
 
     def publish_states(self):
@@ -117,20 +121,21 @@ class RosconLiftAdapter(Node):
             if lift_state is None:
                 self.get_logger().info('No lift state received for lift'
                         f'{lift_name}')
-                return
+                continue
             self.lift_state_pub.publish(lift_state)
 
     def lift_request_callback(self, msg):
         if msg.lift_name not in self.lift_states:
             return
 
+        lift_state = self.lift_states[msg.lift_name]
         if self.lift_requests[msg.lift_name] is not None:
             self.get_logger().info(
                 'Lift is currently busy with another request, try again later.')
             return
 
-        if self.lift_states[msg.lift_name] is not None and \
-                msg.destination_floor not in self.lift_state.available_floors:
+        if lift_state is not None and \
+                msg.destination_floor not in lift_state.available_floors:
             self.get_logger().info(
                 'Floor {} not available.'.format(msg.destination_floor))
             return
@@ -141,7 +146,7 @@ class RosconLiftAdapter(Node):
             return
 
         self.get_logger().info(f'Requested lift {msg.lift_name}'
-                f'to {msg.destination_floors}.')
+                f'to {msg.destination_floor}.')
         self.lift_requests[msg.lift_name] = msg
 
 
