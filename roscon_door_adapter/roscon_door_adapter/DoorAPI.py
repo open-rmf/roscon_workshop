@@ -28,7 +28,7 @@ from rclpy.impl.rcutils_logger import RcutilsLogger
     The DoorAPI class is a wrapper for API calls to the door. Here users are
     expected to fill up the implementations of functions which will be used by
     the DoorAdapter. For example, if your door has a REST API, you will need to
-    make http request calls to the appropriate endpints within these functions.
+    make http request calls to the appropriate endpoints within these functions.
 '''
 class DoorAPI:
     # The constructor accepts a safe loaded YAMLObject, which should contain all
