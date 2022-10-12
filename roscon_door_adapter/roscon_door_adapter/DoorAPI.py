@@ -40,8 +40,8 @@ class DoorAPI:
         self.logger = logger
         self.timeout = 1.0
 
-    def door_state(self, door_name) -> Optional[dict]:
-        ''' Returns the door state or None if the query failed'''
+    def door_mode(self, door_name) -> Optional[int]:
+        ''' Returns the DoorMode or None if the query failed'''
         try:
             response = requests.get(self.prefix +
                     f'/open-rmf/demo-door/door_state?door_name={door_name}',
@@ -51,7 +51,10 @@ class DoorAPI:
             return None
         if response.status_code != 200 or response.json()['success'] is False:
             return None
-        return response.json()['data']
+        # In this example the door uses the same API as RMF, if it didn't
+        # we would need to convert the result into a DoorMode here
+        door_mode = response.json()['data']['current_mode']
+        return door_mode
 
     def _command_door(self, door_name, requested_mode: int) -> bool:
         ''' Utility function to command doors. Returns True if the request

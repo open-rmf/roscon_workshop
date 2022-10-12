@@ -57,12 +57,12 @@ class RosconDoorAdapter(Node):
         new_state.door_time = self.get_clock().now().to_msg()
         new_state.door_name = door_name
 
-        door_state = self.door_api.door_state(door_name)
-        if door_state is None:
-            self.get_logger().error('Unable to retrieve door state')
+        door_mode = self.door_api.door_mode(door_name)
+        if door_mode is None:
+            self.get_logger().error('Unable to retrieve door mode')
             return None
 
-        new_state.current_mode.value = door_state['current_mode']
+        new_state.current_mode.value = door_mode
         return new_state
 
     def publish_states(self):
