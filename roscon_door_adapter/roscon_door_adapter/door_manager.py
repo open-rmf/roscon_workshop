@@ -31,13 +31,10 @@ import uvicorn
 from typing import Optional
 from pydantic import BaseModel
 
-from .DoorAPI import DoorState
-
 app = FastAPI()
 
 class Request(BaseModel):
-    floor: str
-    door_state: int
+    requested_mode: int
 
 class Response(BaseModel):
     data: Optional[dict] = None
@@ -89,17 +86,13 @@ class DoorManager(Node):
                 self.get_logger().warn('Door state not received')
                 return response
 
-            response['data']['available_floors'] = state.available_floors
-            response['data']['current_floor'] = state.current_floor
-            response['data']['destination_floor'] = state.destination_floor
-            response['data']['door_state'] = state.door_state
-            response['data']['motion_state'] = state.motion_state
+            response['data']['current_mode'] = state.current_mode.value
             response['success'] = True
             return response
 
         @app.post('/open-rmf/demo-door/door_request',
                 response_model=Response)
-        async def request(door_name: str, floor: Request):
+        async def request(door_name: str, mode: Request):
             req = DoorRequest()
             response = {
                 'data': {},
@@ -108,16 +101,14 @@ class DoorManager(Node):
             }
 
             if door_name not in self.door_states:
-                self.get_logger().warn('Door not being managed')
+                self.get_logger().warn(f'Door {door_name} not being managed')
                 return response
 
             now =  self.get_clock().now()
             req.door_name = door_name
             req.request_time = now.to_msg()
-            req.request_type = req.REQUEST_AGV_MODE
-            req.door_state = floor.door_state
-            req.destination_floor = floor.floor
-            req.session_id = req.door_name + '-' + str(now)
+            req.requested_mode = mode.requested_mode
+            req.requester_id = mode.requester_id
 
             self.door_request_pub.publish(req)
             response['success'] = True

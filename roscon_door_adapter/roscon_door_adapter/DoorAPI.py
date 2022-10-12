@@ -23,21 +23,8 @@ import requests
 from yaml import YAMLObject
 from typing import Optional
 
-from rmf_door_msgs.msg import DoorState
+from rmf_door_msgs.msg import DoorMode, DoorState
 from rclpy.impl.rcutils_logger import RcutilsLogger
-
-
-class DoorState(enum.IntEnum):
-    CLOSED = 0
-    MOVING = 1
-    OPEN = 2
-
-
-class MotionState(enum.IntEnum):
-    STOPPED = 0
-    UP = 1
-    DOWN = 2
-    UNKNOWN = 3
 
 
 '''
@@ -69,11 +56,10 @@ class DoorAPI:
             return None
         return response.json()['data']
 
-    def command_door(self, door_name, floor: str, door_state: int) -> bool:
-        ''' Sends the door cabin to a specific floor and opens all available
-            doors for that floor. Returns True if the request was sent out
-            successfully, False otherwise'''
-        data = {'floor': floor, 'door_state': door_state}
+    def _command_door(self, door_name, requested_mode: int) -> bool:
+        ''' Utility function to command doors. Returns True if the request
+            was sent out successfully, False otherwise'''
+        data = {'requested_mode': requested_mode}
         response = requests.post(self.prefix +
                 f'/open-rmf/demo-door/door_request?door_name={door_name}',
                 timeout=self.timeout,
@@ -82,3 +68,13 @@ class DoorAPI:
         if response.status_code != 200 or response.json()['success'] is False:
             return False
         return True
+
+    def open_door(self, door_name):
+        ''' Command the door to open. Returns True if the request
+            was sent out successfully, False otherwise'''
+        return _command_door(door_name, DoorMode.MODE_OPEN)
+
+    def close_door(self, door_name):
+        ''' Command the door to close. Returns True if the request
+            was sent out successfully, False otherwise'''
+        return _command_door(door_name, DoorMode.MODE_CCLOSEDD)
