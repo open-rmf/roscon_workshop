@@ -23,19 +23,7 @@ from yaml import YAMLObject
 from typing import Optional
 
 from rclpy.impl.rcutils_logger import RcutilsLogger
-
-
-class DoorState(enum.IntEnum):
-    CLOSED = 0
-    MOVING = 1
-    OPEN = 2
-
-
-class MotionState(enum.IntEnum):
-    STOPPED = 0
-    UP = 1
-    DOWN = 2
-    UNKNOWN = 3
+from rmf_lift_msgs.msg import LiftState
 
 
 '''
@@ -54,7 +42,7 @@ class LiftAPI:
         self.logger = logger
         self.timeout = 1.0
 
-    def lift_state(self, lift_name) -> Optional[dict]:
+    def lift_state(self, lift_name) -> Optional[LiftState]:
         ''' Returns the lift state or None if the query failed'''
         try:
             response = requests.get(self.prefix +
@@ -65,7 +53,15 @@ class LiftAPI:
             return None
         if response.status_code != 200 or response.json()['success'] is False:
             return None
-        return response.json()['data']
+        res_data = response.json()['data']
+        lift_state = LiftState()
+        lift_state.lift_name = lift_name
+        lift_state.available_floors = res_data['available_floors']
+        lift_state.door_state = res_data['door_state']
+        lift_state.motion_state = res_data['motion_state']
+        lift_state.current_floor = res_data['current_floor']
+        lift_state.destination_floor = res_data['destination_floor']
+        return lift_state
 
     def command_lift(self, lift_name, floor: str, door_state: int) -> bool:
         ''' Sends the lift cabin to a specific floor and opens all available

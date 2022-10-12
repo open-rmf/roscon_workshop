@@ -84,18 +84,16 @@ class RosconLiftAdapter(Node):
         new_state.lift_time = self.get_clock().now().to_msg()
         new_state.lift_name = lift_name
 
-        def _retrieve_fail_error(value_name: str):
-            self.get_logger().error(f'Unable to retrieve {value_name}')
-            return None
-
         lift_state = self.lift_api.lift_state(lift_name)
         if lift_state is None:
-            return _retrieve_fail_error('door_state')
-        new_state.available_floors = lift_state['available_floors']
-        new_state.current_floor = lift_state['current_floor']
-        new_state.destination_floor = lift_state['destination_floor']
-        new_state.door_state= lift_state['door_state']
-        new_state.motion_state= lift_state['motion_state']
+            self.get_logger().error(f'Unable to retrieve lift state')
+            return None
+
+        new_state.available_floors = lift_state.available_floors
+        new_state.current_floor = lift_state.current_floor
+        new_state.destination_floor = lift_state.destination_floor
+        new_state.door_state= lift_state.door_state
+        new_state.motion_state= lift_state.motion_state
 
         new_state.available_modes = [LiftState.MODE_HUMAN, LiftState.MODE_AGV]
         new_state.current_mode = LiftState.MODE_AGV
