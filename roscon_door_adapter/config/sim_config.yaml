@@ -1,0 +1,5 @@
+door_manager:
+  ip: localhost
+  port: 5001
+
+doors: [main_door_left, green_room_door]
