@@ -107,8 +107,8 @@ class DoorManager(Node):
             now =  self.get_clock().now()
             req.door_name = door_name
             req.request_time = now.to_msg()
-            req.requested_mode = mode.requested_mode
-            req.requester_id = mode.requester_id
+            req.requested_mode.value = mode.requested_mode
+            req.requester_id = 'roscon_door_manager'
 
             self.door_request_pub.publish(req)
             response['success'] = True
@@ -140,7 +140,7 @@ def main(argv=sys.argv):
     uvicorn.run(app,
             host=config['door_manager']['ip'],
             port=config['door_manager']['port'],
-            log_level='info')
+            log_level='warning')
 
     rclpy.shutdown()
 

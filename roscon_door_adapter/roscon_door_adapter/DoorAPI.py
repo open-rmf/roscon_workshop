@@ -64,7 +64,6 @@ class DoorAPI:
                 f'/open-rmf/demo-door/door_request?door_name={door_name}',
                 timeout=self.timeout,
                 json=data)
-        print(response)
         if response.status_code != 200 or response.json()['success'] is False:
             return False
         return True
@@ -72,9 +71,9 @@ class DoorAPI:
     def open_door(self, door_name):
         ''' Command the door to open. Returns True if the request
             was sent out successfully, False otherwise'''
-        return _command_door(door_name, DoorMode.MODE_OPEN)
+        return self._command_door(door_name, DoorMode.MODE_OPEN)
 
     def close_door(self, door_name):
         ''' Command the door to close. Returns True if the request
             was sent out successfully, False otherwise'''
-        return _command_door(door_name, DoorMode.MODE_CCLOSEDD)
+        return self._command_door(door_name, DoorMode.MODE_CLOSED)

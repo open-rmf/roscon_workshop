@@ -69,7 +69,7 @@ class RosconDoorAdapter(Node):
         for door_name in self.doors:
             door_state = self._door_state(door_name)
             if door_state is None:
-                self.get_logger().info('No door state received for door'
+                self.get_logger().info('No door state received for door '
                         f'{door_name}')
                 continue
             self.door_state_pub.publish(door_state)
@@ -79,11 +79,11 @@ class RosconDoorAdapter(Node):
             return
 
         if msg.requested_mode.value == DoorMode.MODE_OPEN:
-            self.api.open_door()
+            self.door_api.open_door(msg.door_name)
             self.get_logger().info(f'Requested to open door {msg.door_name}')
 
         elif msg.requested_mode.value == DoorMode.MODE_CLOSED:
-            self.api.close_door()
+            self.door_api.close_door(msg.door_name)
             self.get_logger().info(f'Requested to close door {msg.door_name}')
 
 
