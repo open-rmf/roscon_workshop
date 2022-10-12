@@ -1,0 +1,5 @@
+lift_manager:
+  ip: localhost
+  port: 5001
+
+lifts: [lift]
