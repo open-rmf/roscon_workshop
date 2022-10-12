@@ -8,6 +8,7 @@
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <arg name="viz_config_file" value ="$(find-pkg-share roscon_demos)/include/workshop.rviz"/>
     <arg name="config_file" value="$(find-pkg-share roscon_maps)/workshop/workshop.building.yaml"/>
+    <arg name="use_rmf_panel" value="false"/>
   </include>
 
   <!-- TinyRobot fleet adapter -->

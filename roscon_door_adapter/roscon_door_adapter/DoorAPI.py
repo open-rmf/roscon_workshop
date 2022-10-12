@@ -56,11 +56,15 @@ class DoorAPI:
     def _command_door(self, door_name, requested_mode: int) -> bool:
         ''' Utility function to command doors. Returns True if the request
             was sent out successfully, False otherwise'''
-        data = {'requested_mode': requested_mode}
-        response = requests.post(self.prefix +
-                f'/open-rmf/demo-door/door_request?door_name={door_name}',
-                timeout=self.timeout,
-                json=data)
+        try:
+            data = {'requested_mode': requested_mode}
+            response = requests.post(self.prefix +
+                    f'/open-rmf/demo-door/door_request?door_name={door_name}',
+                    timeout=self.timeout,
+                    json=data)
+        except Exception as err:
+            self.logger.info(f'{err}')
+            return None
         if response.status_code != 200 or response.json()['success'] is False:
             return False
         return True
