@@ -17,13 +17,11 @@
 from __future__ import annotations
 
 import enum
-import sys
 
 import requests
 from yaml import YAMLObject
 from typing import Optional
 
-from rmf_lift_msgs.msg import LiftState
 from rclpy.impl.rcutils_logger import RcutilsLogger
 
 
@@ -74,11 +72,14 @@ class LiftAPI:
             doors for that floor. Returns True if the request was sent out
             successfully, False otherwise'''
         data = {'floor': floor, 'door_state': door_state}
-        response = requests.post(self.prefix +
-                f'/open-rmf/demo-lift/lift_request?lift_name={lift_name}',
-                timeout=self.timeout,
-                json=data)
-        print(response)
+        try:
+            response = requests.post(self.prefix +
+                    f'/open-rmf/demo-lift/lift_request?lift_name={lift_name}',
+                    timeout=self.timeout,
+                    json=data)
+        except Exception as err:
+            self.logger.info(f'{err}')
+            return None
         if response.status_code != 200 or response.json()['success'] is False:
             return False
         return True

@@ -149,7 +149,7 @@ def main(argv=sys.argv):
     uvicorn.run(app,
             host=config['lift_manager']['ip'],
             port=config['lift_manager']['port'],
-            log_level='info')
+            log_level='warning')
 
     rclpy.shutdown()
 
