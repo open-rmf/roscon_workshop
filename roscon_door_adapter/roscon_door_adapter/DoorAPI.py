@@ -16,14 +16,11 @@
 
 from __future__ import annotations
 
-import enum
-import sys
-
 import requests
 from yaml import YAMLObject
 from typing import Optional
 
-from rmf_door_msgs.msg import DoorMode, DoorState
+from rmf_door_msgs.msg import DoorMode
 from rclpy.impl.rcutils_logger import RcutilsLogger
 
 

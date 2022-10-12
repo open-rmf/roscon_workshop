@@ -55,7 +55,7 @@ class DoorManager(Node):
         self.door_states = {}
         for door in doors:
             self.door_states[door] = None
-        
+
         # Setup publisher and subscriber
         self.door_request_pub = self.create_publisher(
             DoorRequest,
@@ -104,7 +104,7 @@ class DoorManager(Node):
                 self.get_logger().warn(f'Door {door_name} not being managed')
                 return response
 
-            now =  self.get_clock().now()
+            now = self.get_clock().now()
             req.door_name = door_name
             req.request_time = now.to_msg()
             req.requested_mode.value = mode.requested_mode

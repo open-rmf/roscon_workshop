@@ -59,7 +59,7 @@ class RosconDoorAdapter(Node):
 
         door_state = self.door_api.door_state(door_name)
         if door_state is None:
-            self.get_logger().error(f'Unable to retrieve door state')
+            self.get_logger().error('Unable to retrieve door state')
             return None
 
         new_state.current_mode.value = door_state['current_mode']
