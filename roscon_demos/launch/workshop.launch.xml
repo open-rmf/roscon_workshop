@@ -12,6 +12,7 @@
   </include>
 
   <!-- TinyRobot fleet adapter -->
+  <!--
   <group>
     <include file="$(find-pkg-share roscon_fleet_adapter)/launch/fleet_adapter.launch.xml">
       <arg name="use_sim_time" value="$(var use_sim_time)"/>
@@ -19,6 +20,7 @@
       <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml"/>
     </include>
   </group>
+  -->
 
   <!-- Demo lift adapter -->
   <group>
