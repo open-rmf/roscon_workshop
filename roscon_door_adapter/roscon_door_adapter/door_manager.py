@@ -83,7 +83,6 @@ class DoorManager(Node):
 
             state = self.door_states[door_name]
             if state is None:
-                self.get_logger().warn('Door state not received')
                 return response
 
             response['data']['current_mode'] = state.current_mode.value

@@ -31,8 +31,6 @@ import uvicorn
 from typing import Optional
 from pydantic import BaseModel
 
-from .LiftAPI import DoorState
-
 app = FastAPI()
 
 class Request(BaseModel):
