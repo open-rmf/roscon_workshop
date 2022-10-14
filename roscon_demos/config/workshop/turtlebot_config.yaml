@@ -2,7 +2,7 @@
 # RMF Fleet parameters
 
 rmf_fleet:
-  name: "turtlebot"
+  name: "TinyRobot"
   fleet_manager:
     ip: "127.0.0.1"
     port: 22011
@@ -43,26 +43,26 @@ robots:
   # Here the user is expected to append the configuration for each robot in the
   # fleet.
   # Configuration for turtlebot1
-  turtlebot1:
+  tinyrobot1:
     robot_config:
       max_delay: 15.0 # allowed seconds of delay of the current itinerary before it gets interrupted and replanned
     rmf_config:
       robot_state_update_frequency: 10.0
       start:
         map_name: "L1"
-        waypoint: "turtlebot1_charger"
+        waypoint: "charger_3"
         orientation: 0.0 # radians
       charger:
-        waypoint: "turtlebot1_charger"
+        waypoint: "charger_3"
   # Configuration for turtlebot2
-  turtlebot2:
+  tinyrobot2:
     robot_config:
       max_delay: 15.0 # allowed seconds of delay of the current itinerary before it gets interrupted and replanned
     rmf_config:
       robot_state_update_frequency: 10.0
       start:
         map_name: "L1"
-        waypoint: "turtlebot2_charger"
+        waypoint: "charger_2"
         orientation: 0.0 # radians
       charger:
-        waypoint: "turtlebot2_charger"
+        waypoint: "charger_2"
