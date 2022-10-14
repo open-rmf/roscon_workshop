@@ -54,6 +54,10 @@ repositories:
   demonstrations/rmf_demos:
     type: git
     url: https://github.com/open-rmf/rmf_demos.git
+    version: roscon_workshop
+  demonstrations/fleet_adapter_tb:
+    type: git
+    url: https://github.com/open-rmf/fleet_adapter_tb4.git
     version: main
   thirdparty/menge_vendor:
     type: git
