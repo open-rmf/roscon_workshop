@@ -99,13 +99,6 @@ class FleetAdapter:
 
         # Adapter
         fleet_name = fleet_config['name']
-        adapter = adpt.Adapter.make(f'{fleet_name}_fleet_adapter')
-        if use_sim_time:
-            adapter.node.use_sim_time()
-        assert adapter, ("Unable to initialize fleet adapter. Please ensure "
-                         "RMF Schedule Node is running")
-        adapter.start()
-        time.sleep(1.0)
 
         node.declare_parameter('server_uri', rclpy.Parameter.Type.STRING)
         server_uri = node.get_parameter(
@@ -151,6 +144,9 @@ class FleetAdapter:
         # Make the easy full control
         easy_full_control = adpt.EasyFullControl.make(configuration)
 
+        if use_sim_time:
+            easy_full_control.node.use_sim_time()
+
         easy_full_control.start()
         time.sleep(1.0)
 
@@ -162,12 +158,11 @@ class FleetAdapter:
         def _goal_completed(robot_name, remaining_time, request_replan):
             request_replan = api.requires_replan(robot_name)
             remaining_time = api.navigation_remaining_duration(robot_name, self.cmd_ids[robot_name])
-            node.get_logger().info(f"Checking goal completed for robot {robot_name}, time {remaining_time}")
             return api.process_completed(robot_name, self.cmd_ids[robot_name])
 
         def _robot_state(robot_name):
             data = api.data(robot_name)
-            if data is None:
+            if data is None or data['success'] is False:
                 return None
             pos = data['data']['position']
             state = adpt.easy_full_control.RobotState(
