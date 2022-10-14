@@ -147,9 +147,6 @@ class FleetAdapter:
         if use_sim_time:
             easy_full_control.node.use_sim_time()
 
-        easy_full_control.start()
-        time.sleep(1.0)
-
         def _check_completed(robot_name):
             if robot_name not in self.cmd_ids:
                 return False
