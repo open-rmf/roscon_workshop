@@ -1,7 +1,7 @@
 coordinate_system: reference_image
 crowd_sim:
   agent_groups:
-    - {agents_name: [turtlebot1, turtlebot2], agents_number: 2, group_id: 0, profile_selector: external_agent, state_selector: external_static, x: 0, y: 0}
+    - {agents_name: [tinyrobot2, tinyrobot1], agents_number: 2, group_id: 0, profile_selector: external_agent, state_selector: external_static, x: 0, y: 0}
   agent_profiles:
     - {ORCA_tau: 1, ORCA_tauObst: 0.40000000000000002, class: 1, max_accel: 0, max_angle_vel: 0, max_neighbors: 10, max_speed: 0, name: external_agent, neighbor_dist: 5, obstacle_set: 1, pref_speed: 0, r: 0.25}
   enable: 0
@@ -22,7 +22,7 @@ levels:
       - {ids: ["{5dd57d63-9651-4041-ba1f-1bf6af81118d}", "{563fec19-9c77-4148-8b12-becef7874999}"]}
       - {ids: ["{b597cb11-99b8-45fe-b91d-754f9c73069f}", "{0a698762-949b-41d3-bc5d-90edb3a0e716}"]}
     doors:
-      - [36, 37, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, main_door_right], plugin: [1, none], right_left_ratio: [3, 1], type: [1, double_hinged]}]
+      - [36, 37, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, main_door_right], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, double_hinged]}]
       - [35, 38, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, main_door_left], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, double_hinged]}]
       - [44, 45, {motion_axis: [1, end], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, green_room_door], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, hinged]}]
       - [61, 62, {motion_axis: [1, end], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, side_room_door], plugin: [1, none], right_left_ratio: [3, 1], type: [1, hinged]}]
