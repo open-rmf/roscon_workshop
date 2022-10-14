@@ -10,22 +10,14 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>roscon_demos_maps</exec_depend>
+  <exec_depend>rmf_demos</exec_depend>
+  <exec_depend>roscon_door_adapter</exec_depend>
+  <exec_depend>roscon_lift_adapter</exec_depend>
+  <exec_depend>roscon_maps</exec_depend>
 
-  <exec_depend>rmf_traffic_ros2</exec_depend>
-  <exec_depend>rmf_task_ros2</exec_depend>
-  <exec_depend>rmf_fleet_adapter</exec_depend>
-  <exec_depend>rmf_building_map_tools</exec_depend>
-
-  <exec_depend>rmf_visualization</exec_depend>
-
-  <exec_depend>rmf_demos_assets</exec_depend>
-  <exec_depend>rmf_demos_tasks</exec_depend>
-  <exec_depend>rmf_demos_panel</exec_depend>
-  <exec_depend>rmf_demos_fleet_adapter</exec_depend>
-  <exec_depend>rviz2</exec_depend>
-
-  <exec_depend>launch_xml</exec_depend>
+  <exec_depend>navigation2</exec_depend>
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>turtlebot3_models</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
