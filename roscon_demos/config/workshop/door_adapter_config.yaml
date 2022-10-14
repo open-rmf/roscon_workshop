@@ -2,4 +2,4 @@ door_manager:
   ip: localhost
   port: 5002
 
-doors: [main_door_left, green_room_door]
+doors: [main_door_left, main_door_right, side_room_door, green_room_door]

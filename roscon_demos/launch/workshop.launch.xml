@@ -1,7 +1,8 @@
 <?xml version='1.0' ?>
 
 <launch>
-  <arg name="use_sim_time" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="easy_fleet" default="false" description="Set to true if using the EasyFullControl fleet adapter"/>
 
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_demos)/common.launch.xml">
@@ -13,8 +14,9 @@
 
   <!-- TinyRobot fleet adapter -->
   <group>
-    <include file="$(find-pkg-share rmf_demos_fleet_adapter)/launch/fleet_adapter.launch.xml">
+    <include file="$(find-pkg-share roscon_fleet_adapter)/launch/fleet_adapter.launch.xml">
       <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="easy_fleet" value="$(var easy_fleet)"/>
       <arg name="nav_graph_file" value="$(find-pkg-share roscon_maps)/maps/workshop/nav_graphs/0.yaml" />
       <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml"/>
     </include>
