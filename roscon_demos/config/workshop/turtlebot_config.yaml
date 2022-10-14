@@ -35,7 +35,7 @@ rmf_fleet:
     loop: True
     delivery: True
     clean: False
-    finishing_request: "park" # [park, charge, nothing]
+    finishing_request: "nothing" # [park, charge, nothing]
 
 # TinyRobot CONFIG =================================================================
 
