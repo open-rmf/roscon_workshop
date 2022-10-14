@@ -56,9 +56,10 @@ class FleetAdapter:
         # Keep track of which map the robot is in
         self.last_map = {}
         self.cmd_ids = {}
-        self.adapter = self.initialize_fleet(config_yaml, nav_graph_path, node, use_sim_time)
+        configuration = self.get_configuration(config_yaml, nav_graph_path, node)
+        self.adapter = self.initialize_fleet(configuration, config_yaml['robots'], node, use_sim_time)
 
-    def initialize_fleet(self, config_yaml, nav_graph_path, node, use_sim_time):
+    def get_configuration(self, config_yaml, nav_graph_path, node):
         # Profile and traits
         fleet_config = config_yaml['rmf_fleet']
         profile = traits.Profile(geometry.make_final_convex_circle(
@@ -119,7 +120,7 @@ class FleetAdapter:
         # Initialize robot API for this fleet
         prefix = 'http://' + fleet_config['fleet_manager']['ip'] + \
                  ':' + str(fleet_config['fleet_manager']['port'])
-        api = RobotAPI(
+        self.api = RobotAPI(
             prefix,
             fleet_config['fleet_manager']['user'],
             fleet_config['fleet_manager']['password'])
@@ -141,6 +142,9 @@ class FleetAdapter:
             max_delay=datetime.timedelta(10.0), # TODO max delay
             update_interval=fleet_state_update_dt)
 
+        return configuration
+
+    def initialize_fleet(self, configuration, robots_yaml, node, use_sim_time):
         # Make the easy full control
         easy_full_control = adpt.EasyFullControl.make(configuration)
 
@@ -150,15 +154,15 @@ class FleetAdapter:
         def _check_completed(robot_name):
             if robot_name not in self.cmd_ids:
                 return False
-            return api.process_completed(robot_name, self.cmd_ids[robot_name])
+            return self.api.process_completed(robot_name, self.cmd_ids[robot_name])
 
         def _goal_completed(robot_name, remaining_time, request_replan):
-            request_replan = api.requires_replan(robot_name)
-            remaining_time = api.navigation_remaining_duration(robot_name, self.cmd_ids[robot_name])
-            return api.process_completed(robot_name, self.cmd_ids[robot_name])
+            request_replan = self.api.requires_replan(robot_name)
+            remaining_time = self.api.navigation_remaining_duration(robot_name, self.cmd_ids[robot_name])
+            return self.api.process_completed(robot_name, self.cmd_ids[robot_name])
 
         def _robot_state(robot_name):
-            data = api.data(robot_name)
+            data = self.api.data(robot_name)
             if data is None or data['success'] is False:
                 return None
             pos = data['data']['position']
@@ -175,7 +179,7 @@ class FleetAdapter:
             cmd_id = self.next_id
             self.next_id += 1
             self.cmd_ids[robot_name] = cmd_id
-            api.navigate(robot_name, cmd_id, goal, map_name)
+            self.api.navigate(robot_name, cmd_id, goal, map_name)
             node.get_logger().info(f"Navigating robot {robot_name}")
             return partial(_goal_completed, robot_name)
 
@@ -183,13 +187,13 @@ class FleetAdapter:
             cmd_id = self.next_id
             self.next_id += 1
             self.cmd_ids[robot_name] = cmd_id
-            return api.stop(robot_name, cmd_id)
+            return self.api.stop(robot_name, cmd_id)
 
         def _dock(robot_name, dock_name, update_handle):
             cmd_id = self.next_id
             self.next_id += 1
             self.cmd_ids[robot_name] = cmd_id
-            api.start_process(robot_name, cmd_id, dock_name, self.last_map[robot_name])
+            self.api.start_process(robot_name, cmd_id, dock_name, self.last_map[robot_name])
             return partial(_goal_completed, robot_name)
 
         def _action_executor(robot_name: str,
@@ -199,9 +203,9 @@ class FleetAdapter:
             pass
 
         # Add the robots
-        for robot in config_yaml['robots']:
+        for robot in robots_yaml:
             node.get_logger().info(f'Found robot {robot}')
-            robot_config = config_yaml['robots'][robot]['rmf_config']
+            robot_config = robots_yaml[robot]['rmf_config']
             success = False
             while success is False:
                 state = _robot_state(robot)
