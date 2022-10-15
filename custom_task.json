@@ -1,0 +1,47 @@
+[
+    {
+        "unix_millis_earliest_start_time": 0,
+        "category": "compose",
+        "description": {
+            "category": "go_to_place_patrol",
+            "phases": [
+                {
+                    "activity": {
+                        "category": "sequence",
+                        "description": {
+                            "activities": [
+                                {
+                                    "category": "go_to_place",
+                                    "description": "bottom_left"
+                                },
+                                {
+                                    "category": "patrol",
+                                    "description": {
+                                        "places": [
+                                            "p3",
+                                            "p5",
+                                            "p8"
+                                        ],
+                                        "rounds": 3
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "unix_millis_earliest_start_time": 0,
+        "category": "patrol",
+        "description": {
+          "places": [
+            "p9",
+            "p10",
+            "p11"
+          ],
+          "rounds": 2
+        }
+    }
+]
