@@ -1,0 +1,17 @@
+[
+    {
+        "unix_millis_earliest_start_time": 0,
+        "category": "patrol",
+        "description": {
+          "places": [
+            "p3",
+            "p5",
+            "p8",
+            "p9",
+            "p10",
+            "p11"
+          ],
+          "rounds": 2
+        }
+    }
+]
