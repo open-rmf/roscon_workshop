@@ -12,6 +12,7 @@
 
   <exec_depend>roscon_demos</exec_depend>
   <exec_depend>rmf_demos_gz_classic</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
