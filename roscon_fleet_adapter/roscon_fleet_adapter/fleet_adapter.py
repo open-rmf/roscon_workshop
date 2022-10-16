@@ -70,11 +70,6 @@ class FleetAdapter:
         if use_sim_time:
             easy_full_control.node.use_sim_time()
 
-        def _check_completed(robot_name):
-            if robot_name not in self.cmd_ids:
-                return False
-            return self.api.process_completed(robot_name, self.cmd_ids[robot_name])
-
         def _goal_completed(robot_name, remaining_time, request_replan):
             request_replan = self.api.requires_replan(robot_name)
             remaining_time = self.api.navigation_remaining_duration(robot_name, self.cmd_ids[robot_name])

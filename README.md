@@ -45,26 +45,64 @@ ros2 launch roscon_gz_classic world.launch.xml run_adapters:= false map_name:=wo
 ```
 
 ## Fleet integration with Open-RMF
+![](docs/test_fleet_adapter.png)
 
-Launch the demo world
+Launch the demo world. You should now be able to see the schedule and fleet
+state markers in RViz for each robot.
 ```bash
+cd ~/roscon_ws
+source install/setup.bash
+ros2 launch roscon_gz_classic workshop.launch.xml
+```
+Then send a couple of patrolling tasks to Open-RMF.
+```bash
+cd ~/roscon_ws
+source install/setup.bash
+ros2 run rmf_demos_tasks dispatch_patrol -p p2 p4 p6 -n 3 --use_sim_time
+ros2 run rmf_demos_tasks dispatch_patrol -p p4 p5 p8 -n 3 --use_sim_time
+```
+> Note: You may see some errors from the lift and door adapters but this okay,
+we will implement them shortly.
+
+ros2 run rmf_demos_tasks dispatch_patrol -p p4 p5 p8 -n 3 --use_sim_time
+
+## Door integration with Open-RMF
+![](docs/test_door_adapter.png)
+
+Launch the demo world. You should now be able to see the door states in RViz.
+You can also use the `DoorPanel` to manually open/close doors to test the
+adapter.
+```bash
+cd ~/roscon_ws
+source install/setup.bash
 ros2 launch roscon_gz_classic workshop.launch.xml
 ```
 
-Send a robot to the balcony
+Request a robot to go outside. Open-RMF will automatically request the integrated
+door to open and close as the robot passes through.
 ```bash
+cd ~/roscon_ws
+source install/setup.bash
+ros2 run rmf_demos_tasks dispatch_patrol -p snack_bar --use_sim_time
+```
+
+## Lift integration with Open-RMF
+![](docs/test_lift_adapter.png)
+
+Launch the demo world. You should now be able to see the lift states in RViz.
+You can also use the `Lift` to manually command the lift.
+```bash
+cd ~/roscon_ws
+source install/setup.bash
+ros2 launch roscon_gz_classic workshop.launch.xml
+```
+
+Request a robot to go to `L2`. Open-RMF will automatically request the integrated
+lift to transport the robot to the second level. Remember to change
+`Map Name` in the `SchedulePanel` to `L2` to visualize the second level when
+the robot transitions.
+```bash
+cd ~/roscon_ws
+source install/setup.bash
 ros2 run rmf_demos_tasks dispatch_patrol -p balcony_1 --use_sim_time
 ```
-
-Send a patrol request
-```bash
-ros2 run rmf_demos_tasks dispatch_patrol -p p3 p5 p8 --use_sim_time
-```
-
-## roscon_maps
-
-## roscon_fleet_adapter
-
-## roscon_door_adapter
-
-## roscon_lift_adapter
