@@ -58,89 +58,93 @@ class RosconLiftAdapter(Node):
         self.get_logger().info('Running RosconLiftAdapter')
 
     def update_callback(self):
-        new_states = {}
-        for lift_name, lift_state in self.lift_states.items():
-            new_state = self._lift_state(lift_name)
-            new_states[lift_name] = new_state
-            if new_state is None:
-                self.get_logger().error(
-                    f'Unable to get new state from lift {lift_name}')
-                continue
+        # new_states = {}
+        # for lift_name, lift_state in self.lift_states.items():
+        #     new_state = self._lift_state(lift_name)
+        #     new_states[lift_name] = new_state
+        #     if new_state is None:
+        #         self.get_logger().error(
+        #             f'Unable to get new state from lift {lift_name}')
+        #         continue
 
-            lift_request = self.lift_requests[lift_name]
-            # No request to consider
-            if lift_request is None:
-                continue
+        #     lift_request = self.lift_requests[lift_name]
+        #     # No request to consider
+        #     if lift_request is None:
+        #         continue
 
-            # If all is done, set request to None
-            if lift_request.destination_floor == \
-                    new_state.current_floor and \
-                    new_state.door_state == LiftState.DOOR_OPEN:
-                lift_request = None
-        self.lift_states = new_states
+        #     # If all is done, set request to None
+        #     if lift_request.destination_floor == \
+        #             new_state.current_floor and \
+        #             new_state.door_state == LiftState.DOOR_OPEN:
+        #         lift_request = None
+        # self.lift_states = new_states
+        pass
 
     def _lift_state(self, lift_name) -> Optional[LiftState]:
-        new_state = LiftState()
-        new_state.lift_time = self.get_clock().now().to_msg()
-        new_state.lift_name = lift_name
+        # new_state = LiftState()
+        # new_state.lift_time = self.get_clock().now().to_msg()
+        # new_state.lift_name = lift_name
 
-        lift_state = self.lift_api.lift_state(lift_name)
-        if lift_state is None:
-            self.get_logger().error(f'Unable to retrieve lift state')
-            return None
+        # lift_state = self.lift_api.lift_state(lift_name)
+        # if lift_state is None:
+        #     self.get_logger().error(f'Unable to retrieve lift state')
+        #     return None
 
-        new_state.available_floors = lift_state.available_floors
-        new_state.current_floor = lift_state.current_floor
-        new_state.destination_floor = lift_state.destination_floor
-        new_state.door_state= lift_state.door_state
-        new_state.motion_state= lift_state.motion_state
+        # new_state.available_floors = lift_state.available_floors
+        # new_state.current_floor = lift_state.current_floor
+        # new_state.destination_floor = lift_state.destination_floor
+        # new_state.door_state= lift_state.door_state
+        # new_state.motion_state= lift_state.motion_state
 
-        new_state.available_modes = [LiftState.MODE_HUMAN, LiftState.MODE_AGV]
-        new_state.current_mode = LiftState.MODE_AGV
+        # new_state.available_modes = [LiftState.MODE_HUMAN, LiftState.MODE_AGV]
+        # new_state.current_mode = LiftState.MODE_AGV
 
-        lift_request = self.lift_requests[lift_name]
-        if lift_request is not None:
-            if lift_request.request_type == \
-                    LiftRequest.REQUEST_END_SESSION:
-                new_state.session_id = ''
-            else:
-                new_state.session_id = lift_request.session_id
-        return new_state
+        # lift_request = self.lift_requests[lift_name]
+        # if lift_request is not None:
+        #     if lift_request.request_type == \
+        #             LiftRequest.REQUEST_END_SESSION:
+        #         new_state.session_id = ''
+        #     else:
+        #         new_state.session_id = lift_request.session_id
+        # return new_state
+        pass
 
     def publish_states(self):
-        for lift_name, lift_state in self.lift_states.items():
-            if lift_state is None:
-                self.get_logger().info('No lift state received for lift '
-                        f'{lift_name}')
-                continue
-            self.lift_state_pub.publish(lift_state)
+        # for lift_name, lift_state in self.lift_states.items():
+        #     if lift_state is None:
+        #         self.get_logger().info('No lift state received for lift '
+        #                 f'{lift_name}')
+        #         continue
+        #     self.lift_state_pub.publish(lift_state)
+        pass
 
     def lift_request_callback(self, msg):
-        if msg.lift_name not in self.lift_states:
-            return
+        # if msg.lift_name not in self.lift_states:
+        #     return
 
-        lift_state = self.lift_states[msg.lift_name]
-        '''
-        if self.lift_requests[msg.lift_name] is not None:
-            self.get_logger().info(
-                'Lift is currently busy with another request, try again later.')
-            return
+        # lift_state = self.lift_states[msg.lift_name]
+        # '''
+        # if self.lift_requests[msg.lift_name] is not None:
+        #     self.get_logger().info(
+        #         'Lift is currently busy with another request, try again later.')
+        #     return
 
-        '''
-        if lift_state is not None and \
-                msg.destination_floor not in lift_state.available_floors:
-            self.get_logger().info(
-                'Floor {} not available.'.format(msg.destination_floor))
-            return
+        # '''
+        # if lift_state is not None and \
+        #         msg.destination_floor not in lift_state.available_floors:
+        #     self.get_logger().info(
+        #         'Floor {} not available.'.format(msg.destination_floor))
+        #     return
 
-        if not self.lift_api.command_lift(msg.lift_name, msg.destination_floor, msg.door_state):
-            self.get_logger().error(
-                f'Failed to send lift to {msg.destination_floor}.')
-            return
+        # if not self.lift_api.command_lift(msg.lift_name, msg.destination_floor, msg.door_state):
+        #     self.get_logger().error(
+        #         f'Failed to send lift to {msg.destination_floor}.')
+        #     return
 
-        self.get_logger().info(f'Requested lift {msg.lift_name} '
-                f'to {msg.destination_floor}.')
-        self.lift_requests[msg.lift_name] = msg
+        # self.get_logger().info(f'Requested lift {msg.lift_name} '
+        #         f'to {msg.destination_floor}.')
+        # self.lift_requests[msg.lift_name] = msg
+        pass
 
 
 def main(argv=sys.argv):

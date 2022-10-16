@@ -76,39 +76,43 @@ class FleetAdapter:
             return self.api.process_completed(robot_name, self.cmd_ids[robot_name])
 
         def _robot_state(robot_name):
-            data = self.api.data(robot_name)
-            if data is None or data['success'] is False:
-                return None
-            pos = data['data']['position']
-            state = adpt.easy_full_control.RobotState(
-                robot,
-                robot_config['charger']['waypoint'],
-                data['data']['map_name'],
-                [pos['x'], pos['y'], pos['yaw']],
-                data['data']['battery'])
-            self.last_map[robot_name] = data['data']['map_name']
-            return state
+            # data = self.api.data(robot_name)
+            # if data is None or data['success'] is False:
+            #     return None
+            # pos = data['data']['position']
+            # state = adpt.easy_full_control.RobotState(
+            #     robot,
+            #     robot_config['charger']['waypoint'],
+            #     data['data']['map_name'],
+            #     [pos['x'], pos['y'], pos['yaw']],
+            #     data['data']['battery'])
+            # self.last_map[robot_name] = data['data']['map_name']
+            # return state
+            pass
 
         def _navigate(robot_name, map_name, goal, update_handle):
-            cmd_id = self.next_id
-            self.next_id += 1
-            self.cmd_ids[robot_name] = cmd_id
-            self.api.navigate(robot_name, cmd_id, goal, map_name)
-            node.get_logger().info(f"Navigating robot {robot_name}")
-            return partial(_goal_completed, robot_name)
+            # cmd_id = self.next_id
+            # self.next_id += 1
+            # self.cmd_ids[robot_name] = cmd_id
+            # self.api.navigate(robot_name, cmd_id, goal, map_name)
+            # node.get_logger().info(f"Navigating robot {robot_name}")
+            # return partial(_goal_completed, robot_name)
+            pass
 
         def _stop(robot_name):
-            cmd_id = self.next_id
-            self.next_id += 1
-            self.cmd_ids[robot_name] = cmd_id
-            return self.api.stop(robot_name, cmd_id)
+            # cmd_id = self.next_id
+            # self.next_id += 1
+            # self.cmd_ids[robot_name] = cmd_id
+            # return self.api.stop(robot_name, cmd_id)
+            pass
 
         def _dock(robot_name, dock_name, update_handle):
-            cmd_id = self.next_id
-            self.next_id += 1
-            self.cmd_ids[robot_name] = cmd_id
-            self.api.start_process(robot_name, cmd_id, dock_name, self.last_map[robot_name])
-            return partial(_goal_completed, robot_name)
+            # cmd_id = self.next_id
+            # self.next_id += 1
+            # self.cmd_ids[robot_name] = cmd_id
+            # self.api.start_process(robot_name, cmd_id, dock_name, self.last_map[robot_name])
+            # return partial(_goal_completed, robot_name)
+            pass
 
         def _action_executor(robot_name: str,
                              category: str,

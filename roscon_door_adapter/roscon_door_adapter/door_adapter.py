@@ -53,38 +53,41 @@ class RosconDoorAdapter(Node):
         self.get_logger().info('Running RosconDoorAdapter')
 
     def _door_state(self, door_name) -> Optional[DoorState]:
-        new_state = DoorState()
-        new_state.door_time = self.get_clock().now().to_msg()
-        new_state.door_name = door_name
+        # new_state = DoorState()
+        # new_state.door_time = self.get_clock().now().to_msg()
+        # new_state.door_name = door_name
 
-        door_mode = self.door_api.door_mode(door_name)
-        if door_mode is None:
-            self.get_logger().error('Unable to retrieve door mode')
-            return None
+        # door_mode = self.door_api.door_mode(door_name)
+        # if door_mode is None:
+        #     self.get_logger().error('Unable to retrieve door mode')
+        #     return None
 
-        new_state.current_mode.value = door_mode
-        return new_state
+        # new_state.current_mode.value = door_mode
+        # return new_state
+        pass
 
     def publish_states(self):
-        for door_name in self.doors:
-            door_state = self._door_state(door_name)
-            if door_state is None:
-                self.get_logger().info('No door state received for door '
-                        f'{door_name}')
-                continue
-            self.door_state_pub.publish(door_state)
+        # for door_name in self.doors:
+        #     door_state = self._door_state(door_name)
+        #     if door_state is None:
+        #         self.get_logger().info('No door state received for door '
+        #                 f'{door_name}')
+        #         continue
+        #     self.door_state_pub.publish(door_state)
+        pass
 
     def door_request_callback(self, msg):
-        if msg.door_name not in self.doors:
-            return
+        # if msg.door_name not in self.doors:
+        #     return
 
-        if msg.requested_mode.value == DoorMode.MODE_OPEN:
-            self.door_api.open_door(msg.door_name)
-            self.get_logger().info(f'Requested to open door {msg.door_name}')
+        # if msg.requested_mode.value == DoorMode.MODE_OPEN:
+        #     self.door_api.open_door(msg.door_name)
+        #     self.get_logger().info(f'Requested to open door {msg.door_name}')
 
-        elif msg.requested_mode.value == DoorMode.MODE_CLOSED:
-            self.door_api.close_door(msg.door_name)
-            self.get_logger().info(f'Requested to close door {msg.door_name}')
+        # elif msg.requested_mode.value == DoorMode.MODE_CLOSED:
+        #     self.door_api.close_door(msg.door_name)
+        #     self.get_logger().info(f'Requested to close door {msg.door_name}')
+        pass
 
 
 def main(argv=sys.argv):
