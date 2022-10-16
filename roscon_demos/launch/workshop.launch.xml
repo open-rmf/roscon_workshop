@@ -5,6 +5,7 @@
   <arg name="run_adapters" default="true"/>
   <arg name="easy_fleet" default="true" description="Set to true if using the EasyFullControl fleet adapter"/>
   <arg name="map_name" default="workshop"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share roscon_maps)/maps/$(var map_name)/nav_graphs/0.yaml" />
 
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_demos)/common.launch.xml">
@@ -19,8 +20,9 @@
     <group>
       <include file="$(find-pkg-share roscon_fleet_adapter)/launch/fleet_adapter.launch.xml">
         <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="map_name" value="$(var map_name)"/>
         <arg name="easy_fleet" value="$(var easy_fleet)"/>
-        <arg name="nav_graph_file" value="$(find-pkg-share roscon_maps)/maps/workshop/nav_graphs/0.yaml" />
+        <arg name="nav_graph_file" value="$(var nav_graph_file)" />
         <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml"/>
       </include>
     </group>
