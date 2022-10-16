@@ -4,17 +4,25 @@
   <arg name="gazebo_version" default="11"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="failover_mode" default="false"/>
+  <arg name="run_adapters" default="true"/>
+  <arg name="easy_fleet" default="true" description="Set to true if using the EasyFullControl fleet adapter"/>
+  <arg name="map_name" default="workshop"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share roscon_maps)/maps/$(var map_name)/nav_graphs/0.yaml" />
 
   <!-- Common launch -->
   <include file="$(find-pkg-share roscon_demos)/workshop.launch.xml">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <arg name="failover_mode" value="$(var failover_mode)"/>
+    <arg name="run_adapters" value="$(var run_adapters)"/>
+    <arg name="easy_fleet" value="$(var easy_fleet)"/>
+    <arg name="map_name" value="$(var map_name)"/>
+    <arg name="nav_graph_file" value="$(var nav_graph_file)" />
   </include>
 
   <!-- Simulation launch -->
   <include file="$(find-pkg-share rmf_demos_gz_classic)/simulation.launch.xml">
     <arg name="map_package" value="roscon_maps" />
-    <arg name="map_name" value="workshop" />
+    <arg name="map_name" value="$(var map_name)" />
     <arg name="gazebo_version" value="$(var gazebo_version)" />
   </include>
 

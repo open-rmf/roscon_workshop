@@ -2,40 +2,46 @@
 
 <launch>
   <arg name="use_sim_time" default="true"/>
-  <arg name="easy_fleet" default="false" description="Set to true if using the EasyFullControl fleet adapter"/>
+  <arg name="run_adapters" default="true"/>
+  <arg name="easy_fleet" default="true" description="Set to true if using the EasyFullControl fleet adapter"/>
+  <arg name="map_name" default="workshop"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share roscon_maps)/maps/$(var map_name)/nav_graphs/0.yaml" />
 
   <!-- Common launch -->
   <include file="$(find-pkg-share rmf_demos)/common.launch.xml">
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
     <arg name="viz_config_file" value ="$(find-pkg-share roscon_demos)/include/workshop.rviz"/>
-    <arg name="config_file" value="$(find-pkg-share roscon_maps)/workshop/workshop.building.yaml"/>
+    <arg name="config_file" value="$(find-pkg-share roscon_maps)/$(var map_name)/$(var map_name).building.yaml"/>
     <arg name="use_rmf_panel" value="false"/>
   </include>
 
   <!-- TinyRobot fleet adapter -->
-  <group>
-    <include file="$(find-pkg-share roscon_fleet_adapter)/launch/fleet_adapter.launch.xml">
-      <arg name="use_sim_time" value="$(var use_sim_time)"/>
-      <arg name="easy_fleet" value="$(var easy_fleet)"/>
-      <arg name="nav_graph_file" value="$(find-pkg-share roscon_maps)/maps/workshop/nav_graphs/0.yaml" />
-      <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml"/>
-    </include>
-  </group>
+  <group if="$(var run_adapters)">
+    <group>
+      <include file="$(find-pkg-share roscon_fleet_adapter)/launch/fleet_adapter.launch.xml">
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="map_name" value="$(var map_name)"/>
+        <arg name="easy_fleet" value="$(var easy_fleet)"/>
+        <arg name="nav_graph_file" value="$(var nav_graph_file)" />
+        <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml"/>
+      </include>
+    </group>
 
-  <!-- Demo lift adapter -->
-  <group>
-    <include file="$(find-pkg-share roscon_lift_adapter)/launch/lift_adapter.launch.xml">
-      <arg name="use_sim_time" value="$(var use_sim_time)"/>
-      <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/lift_adapter_config.yaml"/>
-    </include>
-  </group>
+    <!-- Demo lift adapter -->
+    <group>
+      <include file="$(find-pkg-share roscon_lift_adapter)/launch/lift_adapter.launch.xml">
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/lift_adapter_config.yaml"/>
+      </include>
+    </group>
 
-  <!-- Demo door adapter -->
-  <group>
-    <include file="$(find-pkg-share roscon_door_adapter)/launch/door_adapter.launch.xml">
-      <arg name="use_sim_time" value="$(var use_sim_time)"/>
-      <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/door_adapter_config.yaml"/>
-    </include>
+    <!-- Demo door adapter -->
+    <group>
+      <include file="$(find-pkg-share roscon_door_adapter)/launch/door_adapter.launch.xml">
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="config_file" value="$(find-pkg-share roscon_demos)/config/workshop/door_adapter_config.yaml"/>
+      </include>
+    </group>
   </group>
 
 </launch>

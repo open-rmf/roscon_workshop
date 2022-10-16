@@ -1,7 +1,6 @@
 <?xml version='1.0' ?>
 
 <launch>
-
   <arg name="use_sim_time" default="true" description="Use the /clock topic for time to sync with simulation"/>
   <arg name="config_file" default="$(find-pkg-share roscon_demos)/config/workshop/turtlebot_config.yaml" description="The config file that provides important parameters for setting up the adapter"/>
   <arg name="nav_graph_file" default="$(find-pkg-share roscon_maps)/maps/workshop/nav_graphs/0.yaml" description="The graph that this fleet should use for navigation"/>
