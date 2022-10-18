@@ -108,3 +108,30 @@ cd ~/roscon_ws
 source install/setup.bash
 ros2 run rmf_demos_tasks dispatch_patrol -p balcony_1 --use_sim_time
 ```
+
+## Launching with rmf-web dashboard
+![](docs/dashboard.png)
+
+Launch the demo world with the additional `server_uri` launch argument. This allows the fleet adapter to communicate with the `api-server`.
+
+```bash
+cd ~/roscon_ws
+source install/setup.bash
+ros2 launch roscon_gz_classic workshop.launch.xml server_uri:="ws://localhost:8000/_internal"
+```
+
+The simulation will warn that the client is not connected. Next, we launch the `api-server`, which will make that warning go away, and an acknowledgement that it has been connected.
+
+```bash
+source ~/roscon_ws/install/setup.bash
+cd ~/rmf-web/packages/api-server
+pnpm run start
+```
+
+In another terminal serve the built static dashboard, and proceed to [http://localhost:3000](http://localhost:3000).
+
+```bash
+source ~/roscon_ws/install/setup.bash
+cd ~/rmf-web/packages/dashboard
+serve -s build
+```
