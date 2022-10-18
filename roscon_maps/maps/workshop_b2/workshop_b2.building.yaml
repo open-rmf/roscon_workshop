@@ -1,0 +1,68 @@
+coordinate_system: reference_image
+crowd_sim:
+  agent_groups:
+    - {agents_name: [], agents_number: 0, group_id: 0, profile_selector: external_agent, state_selector: external_static, x: 0, y: 0}
+  agent_profiles:
+    - {ORCA_tau: 1, ORCA_tauObst: 0.4, class: 1, max_accel: 0, max_angle_vel: 0, max_neighbors: 10, max_speed: 0, name: external_agent, neighbor_dist: 5, obstacle_set: 1, pref_speed: 0, r: 0.25}
+  enable: 0
+  goal_sets: []
+  model_types: []
+  obstacle_set: {class: 1, file_name: L1_navmesh.nav, type: nav_mesh}
+  states:
+    - {final: 1, goal_set: -1, name: external_static, navmesh_file_name: ""}
+  transitions: []
+  update_time_step: 0.1
+graphs:
+  {}
+levels:
+  L1:
+    constraints:
+      - {ids: ["{dee4d088-f7f4-459e-84ec-cd634aaf5bb6}", "{7ed27fc8-586e-4784-ba3d-a885ba04dc92}"]}
+      - {ids: ["{6757965f-33bf-47f6-bfe9-a4dff0b4538a}", "{dd74f34c-9d0a-4383-be77-6ba8097e1366}"]}
+      - {ids: ["{6c23736a-1249-41bc-9110-e1defb41bbdb}", "{ef38ae53-96de-48fa-a6e6-fe6422fb54e8}"]}
+      - {ids: ["{8ee9d039-f560-446b-a724-0d2cf5744410}", "{61a93129-4a33-4db6-960c-3a030621bda9}"]}
+    drawing:
+      filename: room_b2.png
+    elevation: 0
+    features:
+      - {id: "{7ed27fc8-586e-4784-ba3d-a885ba04dc92}", name: "", x: 744.485, y: 896.437}
+      - {id: "{6757965f-33bf-47f6-bfe9-a4dff0b4538a}", name: "", x: 672.562, y: 272.41}
+      - {id: "{ef38ae53-96de-48fa-a6e6-fe6422fb54e8}", name: "", x: 497.108, y: 849.226}
+      - {id: "{8ee9d039-f560-446b-a724-0d2cf5744410}", name: "", x: 401.02, y: 269.393}
+    floors:
+      - parameters: {ceiling_scale: [3, 1], ceiling_texture: [1, blue_linoleum], indoor: [2, 0], texture_name: [1, blue_linoleum], texture_rotation: [3, 0], texture_scale: [3, 1]}
+        vertices: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    layers:
+      turtlebot:
+        color: [1, 0, 0, 0.5]
+        features:
+          - {id: "{dee4d088-f7f4-459e-84ec-cd634aaf5bb6}", name: "", x: 71.48999999999999, y: 86.92700000000001}
+          - {id: "{dd74f34c-9d0a-4383-be77-6ba8097e1366}", name: "", x: 94.367, y: 394.263}
+          - {id: "{6c23736a-1249-41bc-9110-e1defb41bbdb}", name: "", x: 214.85, y: 115.659}
+          - {id: "{61a93129-4a33-4db6-960c-3a030621bda9}", name: "", x: 234.414, y: 401.621}
+        filename: tb2.png
+        transform:
+          scale: 0.05111151101406312
+          translation_x: 23.38816052684282
+          translation_y: 26.86247317477085
+          yaw: 3.201691615216912
+        visible: true
+    measurements:
+      - [0, 1, {distance: [3, 12]}]
+    vertices:
+      - [302.152, 377.416, 0, ""]
+      - [772.202, 378.499, 0, ""]
+      - [164.956, 41.461, 0, ""]
+      - [909.961, 41.461, 0, ""]
+      - [913.5839999999999, 344.534, 0, ""]
+      - [977.579, 345.742, 0, ""]
+      - [976.372, 901.175, 0, ""]
+      - [913.5839999999999, 899.967, 0, ""]
+      - [915.998, 1172.854, 0, ""]
+      - [1158.699, 1170.439, 0, ""]
+      - [1173.188, 1787.453, 0, ""]
+      - [81.64100000000001, 1799.528, 0, ""]
+      - [80.434, 1171.647, 0, ""]
+      - [172.201, 1171.647, 0, ""]
+lifts: {}
+name: workshop_b2
