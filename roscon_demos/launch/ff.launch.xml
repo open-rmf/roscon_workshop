@@ -1,0 +1,26 @@
+<?xml version='1.0' ?>
+
+<launch>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="map_name" default="workshop_example"/>
+  <arg name="nav_graph_file" default="$(find-pkg-share roscon_maps)/maps/$(var map_name)/nav_graphs/0.yaml" />
+  <arg name="fleet_name" default="tb4"/>
+
+  <!-- Common launch -->
+  <include file="$(find-pkg-share rmf_demos)/common.launch.xml">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="viz_config_file" value ="$(find-pkg-share roscon_demos)/include/workshop.rviz"/>
+    <arg name="config_file" value="$(find-pkg-share roscon_maps)/$(var map_name)/$(var map_name).building.yaml"/>
+    <arg name="use_rmf_panel" value="false"/>
+  </include>
+
+  <!-- TinyRobot fleet adapter -->
+  <group>
+    <include file="$(find-pkg-share roscon_demos)/include/adapters/tb.launch.xml">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="nav_graph_file" value="$(var nav_graph_file)" />
+      <arg name="fleet_name" value="$(var fleet_name)"/>
+    </include>
+  </group>
+
+</launch>
