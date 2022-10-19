@@ -38,12 +38,12 @@ Launch the auto-generated digital twin in `gazebo-classic`
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 launch roscon_gz_classic world.launch.xml run_adapters:=false
+ros2 launch roscon_gz_classic workshop.launch.xml run_adapters:=false
 ```
 
 To launch the example world
 ```
-ros2 launch roscon_gz_classic world.launch.xml run_adapters:= false map_name:=workshop_example
+ros2 launch roscon_gz_classic workshop.launch.xml run_adapters:= false map_name:=workshop_example
 ```
 
 ## Fleet integration with Open-RMF
