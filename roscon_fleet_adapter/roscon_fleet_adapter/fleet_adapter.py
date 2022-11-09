@@ -26,8 +26,6 @@ from rclpy.parameter import Parameter
 import rmf_adapter as adpt
 import rmf_adapter.plan as plan
 
-from .configuration import get_configuration
-
 from functools import partial
 
 from rclpy.qos import QoSProfile
@@ -45,23 +43,34 @@ from .RobotClientAPI import RobotAPI
 
 class FleetAdapter:
 
-    def __init__(self, config_yaml, nav_graph_path, node, use_sim_time):
+    def __init__(self, config_path, nav_graph_path, node, use_sim_time):
         # global counter for command ids
         self.next_id = 0
         # Keep track of which map the robot is in
         self.last_map = {}
         self.cmd_ids = {}
+        # Load config yaml
+        with open(config_path, "r") as f:
+            config_yaml = yaml.safe_load(f)
         # Initialize robot API for this fleet
         fleet_config = config_yaml['rmf_fleet']
         prefix = 'http://' + fleet_config['fleet_manager']['ip'] + \
-                ':' + str(fleet_config['fleet_manager']['port'])
+                 ':' + str(fleet_config['fleet_manager']['port'])
         self.api = RobotAPI(
             prefix,
             fleet_config['fleet_manager']['user'],
             fleet_config['fleet_manager']['password'])
 
-        configuration = get_configuration(config_yaml, nav_graph_path, node)
-        self.adapter = self.initialize_fleet(configuration, config_yaml['robots'], node, use_sim_time)
+        node.declare_parameter('server_uri', rclpy.Parameter.Type.STRING)
+        server_uri = node.get_parameter(
+            'server_uri').get_parameter_value().string_value
+        if server_uri == "":
+            server_uri = None
+
+        configuration = adpt.easy_full_control.Configuration.make(
+            config_path, nav_graph_path, server_uri)
+        self.adapter = self.initialize_fleet(
+            configuration, config_yaml['robots'], node, use_sim_time)
 
     def initialize_fleet(self, configuration, robots_yaml, node, use_sim_time):
         # Make the easy full control
@@ -70,10 +79,19 @@ class FleetAdapter:
         if use_sim_time:
             easy_full_control.node.use_sim_time()
 
-        def _goal_completed(robot_name, remaining_time, request_replan):
+        def _goal_completed(robot_name):
+            success = self.api.process_completed(
+                robot_name, self.cmd_ids[robot_name])
             request_replan = self.api.requires_replan(robot_name)
-            remaining_time = self.api.navigation_remaining_duration(robot_name, self.cmd_ids[robot_name])
-            return self.api.process_completed(robot_name, self.cmd_ids[robot_name])
+            remaining_time = self.api.navigation_remaining_duration(
+                robot_name, self.cmd_ids[robot_name])
+            if remaining_time:
+                remaining_time = datetime.timedelta(seconds=remaining_time)
+            goal_status = adpt.easy_full_control.GoalStatus(
+                success,
+                remaining_time,
+                request_replan)
+            return goal_status
 
         def _robot_state(robot_name):
             data = self.api.data(robot_name)
@@ -107,13 +125,15 @@ class FleetAdapter:
             cmd_id = self.next_id
             self.next_id += 1
             self.cmd_ids[robot_name] = cmd_id
-            self.api.start_process(robot_name, cmd_id, dock_name, self.last_map[robot_name])
+            self.api.start_process(
+                robot_name, cmd_id, dock_name, self.last_map[robot_name])
             return partial(_goal_completed, robot_name)
 
-        def _action_executor(robot_name: str,
-                             category: str,
-                             description: dict,
-                             execution: adpt.robot_update_handle.ActionExecution):
+        def _action_executor(
+                robot_name: str,
+                category: str,
+                description: dict,
+                execution: adpt.robot_update_handle.ActionExecution):
             pass
 
         # Add the robots
@@ -177,7 +197,7 @@ def main(argv=sys.argv):
         node.set_parameters([param])
 
     adapter = FleetAdapter(
-        config_yaml,
+        config_path,
         nav_graph_path,
         node,
         args.use_sim_time)
