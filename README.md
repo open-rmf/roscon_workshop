@@ -4,7 +4,7 @@ Materials for Open-RMF workshop at ROSCon 2022 Kyoto
 
 ![](docs/workshop.png)
 
-Download the VirtualBox image [here](https://drive.google.com/drive/u/1/folders/1KirG3CNn5-LB2XUos5_len-exWbbJJaf).
+Download the VirtualBox image [here](https://www.dropbox.com/sh/d82fy5aqdshiqws/AADph3wt7jsyt6LpLoiJR9Rqa?dl=0).
 
 ## Overview
 The goal of this workshop is to guide participants through the process of
