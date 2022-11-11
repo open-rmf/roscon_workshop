@@ -98,12 +98,14 @@ class FleetAdapter:
             if data is None or data['success'] is False:
                 return None
             pos = data['data']['position']
+            action = False  # this fleet is not configured to perform any actions
             state = adpt.easy_full_control.RobotState(
                 robot,
                 robot_config['charger']['waypoint'],
                 data['data']['map_name'],
                 [pos['x'], pos['y'], pos['yaw']],
-                data['data']['battery'])
+                data['data']['battery'],
+                action)
             self.last_map[robot_name] = data['data']['map_name']
             return state
 
