@@ -29,6 +29,8 @@ from .DoorAPI import DoorAPI
     as handle incoming requests to control the integrated door, by calling the
     implemented functions in DoorAPI.
 '''
+
+
 class RosconDoorAdapter(Node):
     def __init__(self):
         super().__init__('roscon_door_adapter')
@@ -73,7 +75,7 @@ class RosconDoorAdapter(Node):
             door_state = self._door_state(door_name)
             if door_state is None:
                 self.get_logger().info('No door state received for door '
-                        f'{door_name}')
+                                       f'{door_name}')
                 continue
             self.door_state_pub.publish(door_state)
 

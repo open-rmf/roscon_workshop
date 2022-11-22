@@ -15,10 +15,7 @@
 # limitations under the License.
 
 import sys
-import yaml
-import argparse
 from typing import Optional
-from yaml import YAMLObject
 
 import rclpy
 from rclpy.node import Node
@@ -32,6 +29,8 @@ from .LiftAPI import LiftAPI
     as handle incoming requests to control the integrated lift, by calling the
     implemented functions in LiftAPI.
 '''
+
+
 class RosconLiftAdapter(Node):
     def __init__(self):
         super().__init__('roscon_lift_adapter')
@@ -94,14 +93,14 @@ class RosconLiftAdapter(Node):
 
         lift_state = self.lift_api.lift_state(lift_name)
         if lift_state is None:
-            self.get_logger().error(f'Unable to retrieve lift state')
+            self.get_logger().error('Unable to retrieve lift state')
             return None
 
         new_state.available_floors = lift_state.available_floors
         new_state.current_floor = lift_state.current_floor
         new_state.destination_floor = lift_state.destination_floor
-        new_state.door_state= lift_state.door_state
-        new_state.motion_state= lift_state.motion_state
+        new_state.door_state = lift_state.door_state
+        new_state.motion_state = lift_state.motion_state
 
         new_state.available_modes = [LiftState.MODE_HUMAN, LiftState.MODE_AGV]
         new_state.current_mode = LiftState.MODE_AGV
@@ -119,7 +118,7 @@ class RosconLiftAdapter(Node):
         for lift_name, lift_state in self.lift_states.items():
             if lift_state is None:
                 self.get_logger().info('No lift state received for lift '
-                        f'{lift_name}')
+                                       f'{lift_name}')
                 continue
             self.lift_state_pub.publish(lift_state)
 
@@ -147,7 +146,7 @@ class RosconLiftAdapter(Node):
             return
 
         self.get_logger().info(f'Requested lift {msg.lift_name} '
-                f'to {msg.destination_floor}.')
+                               f'to {msg.destination_floor}.')
         self.lift_requests[msg.lift_name] = msg
 
 

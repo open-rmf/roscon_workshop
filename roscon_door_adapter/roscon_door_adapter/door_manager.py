@@ -17,9 +17,6 @@
 import sys
 import threading
 
-import argparse
-import yaml
-
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_system_default
@@ -33,13 +30,16 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+
 class Request(BaseModel):
     requested_mode: int
+
 
 class Response(BaseModel):
     data: Optional[dict] = None
     success: bool
     msg: str
+
 
 '''
     The DoorManager class simulates a bridge between the door API, that
@@ -47,6 +47,8 @@ class Response(BaseModel):
     simulated doors that operate using ROS2 messages.
     Users can use this door to validate their door adapter in simulation
 '''
+
+
 class DoorManager(Node):
 
     def __init__(self, namespace='sim'):
@@ -74,7 +76,7 @@ class DoorManager(Node):
             qos_profile=qos_profile_system_default)
 
         @app.get('/open-rmf/demo-door/door_names',
-                response_model=Response)
+                 response_model=Response)
         async def door_names():
             response = {
                 'data': {},
@@ -87,7 +89,7 @@ class DoorManager(Node):
             return response
 
         @app.get('/open-rmf/demo-door/door_state',
-                response_model=Response)
+                 response_model=Response)
         async def state(door_name: str):
             response = {
                 'data': {},
@@ -108,7 +110,7 @@ class DoorManager(Node):
             return response
 
         @app.post('/open-rmf/demo-door/door_request',
-                response_model=Response)
+                  response_model=Response)
         async def request(door_name: str, mode: Request):
             req = DoorRequest()
             response = {
@@ -143,9 +145,9 @@ def main(argv=sys.argv):
     spin_thread.start()
 
     uvicorn.run(app,
-            host=node.address,
-            port=node.port,
-            log_level='warning')
+                host=node.address,
+                port=node.port,
+                log_level='warning')
 
     rclpy.shutdown()
 
