@@ -33,10 +33,8 @@ from rclpy.impl.rcutils_logger import RcutilsLogger
 class DoorAPI:
     # The constructor accepts a safe loaded YAMLObject, which should contain all
     # information that is required to run any of these API calls.
-    def __init__(self, config: YAMLObject, logger: RcutilsLogger):
-        self.config = config
-        self.prefix = 'http://' + config['door_manager']['ip'] + \
-                ':' + str(config['door_manager']['port'])
+    def __init__(self, address, port, logger: RcutilsLogger):
+        self.prefix = 'http://' + address + ':' + str(port)
         self.logger = logger
         self.timeout = 1.0
 
@@ -71,6 +69,20 @@ class DoorAPI:
         if response.status_code != 200 or response.json()['success'] is False:
             return False
         return True
+
+    def get_door_names(self):
+        ''' Query the door manager for door names. Returns a list of door names
+            if the request was sent out successfully, None otherwise'''
+        try:
+            response = requests.get(self.prefix +
+                    f'/open-rmf/demo-door/door_names',
+                    timeout=self.timeout)
+        except Exception as err:
+            self.logger.info(f'{err}')
+            return None
+        if response.status_code != 200 or response.json()['success'] is False:
+            return None
+        return response.json()['data']['door_names']
 
     def open_door(self, door_name):
         ''' Command the door to open. Returns True if the request

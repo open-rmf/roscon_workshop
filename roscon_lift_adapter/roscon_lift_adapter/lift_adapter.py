@@ -33,16 +33,20 @@ from .LiftAPI import LiftAPI
     implemented functions in LiftAPI.
 '''
 class RosconLiftAdapter(Node):
-    def __init__(self, args, config: YAMLObject):
+    def __init__(self):
         super().__init__('roscon_lift_adapter')
 
         self.lift_states = {}
         self.lift_requests = {}
-        self.lift_config = config
-        self.lift_api = LiftAPI(self.lift_config, self.get_logger())
-        for lift in config['lifts']:
-            self.lift_requests[lift] = None
-            self.lift_states[lift] = self._lift_state(lift)
+
+        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
+        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
+        address = self.get_parameter(
+            'manager_address').get_parameter_value().string_value
+        port = self.get_parameter(
+            'manager_port').get_parameter_value().integer_value
+
+        self.lift_api = LiftAPI(address, port, self.get_logger())
 
         self.lift_state_pub = self.create_publisher(
             LiftState,
@@ -59,7 +63,11 @@ class RosconLiftAdapter(Node):
 
     def update_callback(self):
         new_states = {}
-        for lift_name, lift_state in self.lift_states.items():
+        lift_names = self.lift_api.get_lift_names()
+        for lift_name in lift_names:
+            if lift_name not in self.lift_requests:
+                self.lift_requests[lift_name] = None
+
             new_state = self._lift_state(lift_name)
             new_states[lift_name] = new_state
             if new_state is None:
@@ -144,18 +152,8 @@ class RosconLiftAdapter(Node):
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='roscon_lift_adapter',
-        description='Roscon lift adapter')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = RosconLiftAdapter(args, config)
+    node = RosconLiftAdapter()
     rclpy.spin(node)
     rclpy.shutdown()
 

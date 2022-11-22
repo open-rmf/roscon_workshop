@@ -50,12 +50,17 @@ class Response(BaseModel):
 '''
 class LiftManager(Node):
 
-    def __init__(self, lifts, namespace='sim'):
+    def __init__(self, namespace='sim'):
         super().__init__('lift_manager')
 
+        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
+        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
+        self.address = self.get_parameter(
+            'manager_address').get_parameter_value().string_value
+        self.port = self.get_parameter(
+            'manager_port').get_parameter_value().integer_value
+
         self.lift_states = {}
-        for lift in lifts:
-            self.lift_states[lift] = None
         
         # Setup publisher and subscriber
         self.lift_request_pub = self.create_publisher(
@@ -79,19 +84,29 @@ class LiftManager(Node):
             }
 
             if lift_name not in self.lift_states:
-                self.get_logger().warn('Lift not being managed')
+                self.get_logger().warn(f'Lift {lift_name} not being managed')
                 return response
 
             state = self.lift_states[lift_name]
-            if state is None:
-                self.get_logger().warn('Lift state not received')
-                return response
 
             response['data']['available_floors'] = state.available_floors
             response['data']['current_floor'] = state.current_floor
             response['data']['destination_floor'] = state.destination_floor
             response['data']['door_state'] = state.door_state
             response['data']['motion_state'] = state.motion_state
+            response['success'] = True
+            return response
+
+        @app.get('/open-rmf/demo-lift/lift_names',
+                response_model=Response)
+        async def lift_names():
+            response = {
+                'data': {},
+                'success': False,
+                'msg': ''
+            }
+
+            response['data']['lift_names'] = [name for name in self.lift_states]
             response['success'] = True
             return response
 
@@ -106,7 +121,7 @@ class LiftManager(Node):
             }
 
             if lift_name not in self.lift_states:
-                self.get_logger().warn('Lift not being managed')
+                self.get_logger().warn(f'Lift {lift_name} not being managed')
                 return response
 
             now =  self.get_clock().now()
@@ -122,31 +137,19 @@ class LiftManager(Node):
             return response
 
     def lift_state_cb(self, msg):
-        if msg.lift_name not in self.lift_states:
-            return
         self.lift_states[msg.lift_name] = msg
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='lift_manager',
-        description='Demo lift manager')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = LiftManager(config['lifts'])
+    node = LiftManager()
 
     spin_thread = threading.Thread(target=rclpy.spin, args=(node,))
     spin_thread.start()
 
     uvicorn.run(app,
-            host=config['lift_manager']['ip'],
-            port=config['lift_manager']['port'],
+            host=node.address,
+            port=node.port,
             log_level='warning')
 
     rclpy.shutdown()

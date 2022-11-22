@@ -49,12 +49,17 @@ class Response(BaseModel):
 '''
 class DoorManager(Node):
 
-    def __init__(self, doors, namespace='sim'):
+    def __init__(self, namespace='sim'):
         super().__init__('door_manager')
 
+        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
+        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
+        self.address = self.get_parameter(
+            'manager_address').get_parameter_value().string_value
+        self.port = self.get_parameter(
+            'manager_port').get_parameter_value().integer_value
+
         self.door_states = {}
-        for door in doors:
-            self.door_states[door] = None
 
         # Setup publisher and subscriber
         self.door_request_pub = self.create_publisher(
@@ -68,6 +73,19 @@ class DoorManager(Node):
             self.door_state_cb,
             qos_profile=qos_profile_system_default)
 
+        @app.get('/open-rmf/demo-door/door_names',
+                response_model=Response)
+        async def door_names():
+            response = {
+                'data': {},
+                'success': False,
+                'msg': ''
+            }
+
+            response['data']['door_names'] = [name for name in self.door_states]
+            response['success'] = True
+            return response
+
         @app.get('/open-rmf/demo-door/door_state',
                 response_model=Response)
         async def state(door_name: str):
@@ -78,7 +96,7 @@ class DoorManager(Node):
             }
 
             if door_name not in self.door_states:
-                self.get_logger().warn('Door not being managed')
+                self.get_logger().warn(f'Door {door_name} not found')
                 return response
 
             state = self.door_states[door_name]
@@ -114,31 +132,19 @@ class DoorManager(Node):
             return response
 
     def door_state_cb(self, msg):
-        if msg.door_name not in self.door_states:
-            return
         self.door_states[msg.door_name] = msg
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='door_manager',
-        description='Demo door manager')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = DoorManager(config['doors'])
+    node = DoorManager()
 
     spin_thread = threading.Thread(target=rclpy.spin, args=(node,))
     spin_thread.start()
 
     uvicorn.run(app,
-            host=config['door_manager']['ip'],
-            port=config['door_manager']['port'],
+            host=node.address,
+            port=node.port,
             log_level='warning')
 
     rclpy.shutdown()

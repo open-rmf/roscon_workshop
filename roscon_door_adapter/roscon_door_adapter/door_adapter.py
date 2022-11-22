@@ -15,10 +15,7 @@
 # limitations under the License.
 
 import sys
-import yaml
-import argparse
 from typing import Optional
-from yaml import YAMLObject
 
 import rclpy
 from rclpy.node import Node
@@ -33,12 +30,17 @@ from .DoorAPI import DoorAPI
     implemented functions in DoorAPI.
 '''
 class RosconDoorAdapter(Node):
-    def __init__(self, args, config: YAMLObject):
+    def __init__(self):
         super().__init__('roscon_door_adapter')
 
-        self.door_config = config
-        self.door_api = DoorAPI(self.door_config, self.get_logger())
-        self.doors = set(config['doors'])
+        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
+        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
+        address = self.get_parameter(
+            'manager_address').get_parameter_value().string_value
+        port = self.get_parameter(
+            'manager_port').get_parameter_value().integer_value
+        self.door_api = DoorAPI(address, port, self.get_logger())
+        self.doors = set()
 
         self.door_state_pub = self.create_publisher(
             DoorState,
@@ -66,6 +68,7 @@ class RosconDoorAdapter(Node):
         return new_state
 
     def publish_states(self):
+        self.doors = self.door_api.get_door_names()
         for door_name in self.doors:
             door_state = self._door_state(door_name)
             if door_state is None:
@@ -88,18 +91,8 @@ class RosconDoorAdapter(Node):
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='roscon_door_adapter',
-        description='Roscon door adapter')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = RosconDoorAdapter(args, config)
+    node = RosconDoorAdapter()
     rclpy.spin(node)
     rclpy.shutdown()
 
