@@ -34,12 +34,12 @@ from rclpy.impl.rcutils_logger import RcutilsLogger
 class DoorAPI:
     # The constructor accepts a safe loaded YAMLObject, which should contain all
     # information that is required to run any of these API calls.
-    def __init__(self, address, port, logger: RcutilsLogger):
+    def __init__(self, address: str, port: int, logger: RcutilsLogger):
         self.prefix = 'http://' + address + ':' + str(port)
         self.logger = logger
         self.timeout = 1.0
 
-    def door_mode(self, door_name) -> Optional[int]:
+    def door_mode(self, door_name: str) -> Optional[int]:
         ''' Returns the DoorMode or None if the query failed'''
         try:
             response = requests.get(self.prefix +
@@ -55,7 +55,7 @@ class DoorAPI:
         door_mode = response.json()['data']['current_mode']
         return door_mode
 
-    def _command_door(self, door_name, requested_mode: int) -> bool:
+    def _command_door(self, door_name: str, requested_mode: int) -> bool:
         ''' Utility function to command doors. Returns True if the request
             was sent out successfully, False otherwise'''
         try:
@@ -71,7 +71,7 @@ class DoorAPI:
             return False
         return True
 
-    def get_door_names(self):
+    def get_door_names(self) -> Optional[list]:
         ''' Query the door manager for door names. Returns a list of door names
             if the request was sent out successfully, None otherwise'''
         try:
@@ -85,12 +85,12 @@ class DoorAPI:
             return None
         return response.json()['data']['door_names']
 
-    def open_door(self, door_name):
+    def open_door(self, door_name: str) -> bool:
         ''' Command the door to open. Returns True if the request
             was sent out successfully, False otherwise'''
         return self._command_door(door_name, DoorMode.MODE_OPEN)
 
-    def close_door(self, door_name):
+    def close_door(self, door_name: str) -> bool:
         ''' Command the door to close. Returns True if the request
             was sent out successfully, False otherwise'''
         return self._command_door(door_name, DoorMode.MODE_CLOSED)
