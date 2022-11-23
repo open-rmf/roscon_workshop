@@ -35,12 +35,8 @@ class RosconDoorAdapter(Node):
     def __init__(self):
         super().__init__('roscon_door_adapter')
 
-        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
-        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
-        address = self.get_parameter(
-            'manager_address').get_parameter_value().string_value
-        port = self.get_parameter(
-            'manager_port').get_parameter_value().integer_value
+        address = self.declare_parameter('manager_address', 'localhost').value
+        port = self.declare_parameter('manager_port', 5002).value
         self.door_api = DoorAPI(address, port, self.get_logger())
         self.doors = set()
 

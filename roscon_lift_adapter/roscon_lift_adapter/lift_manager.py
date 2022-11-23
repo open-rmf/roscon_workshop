@@ -55,12 +55,8 @@ class LiftManager(Node):
     def __init__(self, namespace='sim'):
         super().__init__('lift_manager')
 
-        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
-        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
-        self.address = self.get_parameter(
-            'manager_address').get_parameter_value().string_value
-        self.port = self.get_parameter(
-            'manager_port').get_parameter_value().integer_value
+        self.address = self.declare_parameter('manager_address', 'localhost').value
+        self.port = self.declare_parameter('manager_port', 5003).value
 
         self.lift_states = {}
 

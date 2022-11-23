@@ -38,12 +38,8 @@ class RosconLiftAdapter(Node):
         self.lift_states = {}
         self.lift_requests = {}
 
-        self.declare_parameter('manager_address', rclpy.Parameter.Type.STRING)
-        self.declare_parameter('manager_port', rclpy.Parameter.Type.INTEGER)
-        address = self.get_parameter(
-            'manager_address').get_parameter_value().string_value
-        port = self.get_parameter(
-            'manager_port').get_parameter_value().integer_value
+        address = self.declare_parameter('manager_address', 'localhost').value
+        port = self.declare_parameter('manager_port', 5003).value
 
         self.lift_api = LiftAPI(address, port, self.get_logger())
 
