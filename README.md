@@ -1,6 +1,7 @@
 
 # roscon_workshop
-Materials for Open-RMF workshop at ROSCon 2022 Kyoto
+Materials for Open-RMF workshop at ROSCon 2022 Kyoto.
+See guide [here](docs/conference/conference.md) for workshop at a conference.
 
 ![](docs/workshop.png)
 
