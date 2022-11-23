@@ -16,11 +16,19 @@ graphs:
   {}
 levels:
   L1:
+    constraints:
+      - {ids: ["{7ced8c69-e679-4249-b703-630c206bf0b8}", "{dbb0fa6a-daf1-4743-88a0-12c55a2f68ac}"]}
+      - {ids: ["{9323c16c-0cce-41fc-81bf-ad3ecfea04a1}", "{9bb27be9-9b40-48ef-8465-5a77b75cc90d}"]}
+      - {ids: ["{733add4a-bef8-4861-958a-bee50215f212}", "{6cee94a1-2acb-4078-908b-47206c0379d9}"]}
     doors:
       - [19, 20, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, door_1], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, double_hinged]}]
     drawing:
       filename: conference.png
     elevation: 0
+    features:
+      - {id: "{dbb0fa6a-daf1-4743-88a0-12c55a2f68ac}", name: "", x: 268.56200000000001, y: 131.84200000000001}
+      - {id: "{9323c16c-0cce-41fc-81bf-ad3ecfea04a1}", name: "", x: 696.01900000000001, y: 666.54100000000005}
+      - {id: "{6cee94a1-2acb-4078-908b-47206c0379d9}", name: "", x: 929.32000000000005, y: 177.81100000000001}
     fiducials:
       - [300.35500000000002, 45.424999999999997, f1]
       - [755.06799999999998, 44.991999999999997, f2]
@@ -67,7 +75,19 @@ levels:
       - [30, 31, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
       - [46, 48, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
     layers:
-      {}
+      sim_scan:
+        color: [1, 0, 0, 0.5]
+        features:
+          - {id: "{7ced8c69-e679-4249-b703-630c206bf0b8}", name: "", x: 40.951999999999998, y: 36.514000000000003}
+          - {id: "{9bb27be9-9b40-48ef-8465-5a77b75cc90d}", name: "", x: 205.465, y: 241.29400000000001}
+          - {id: "{733add4a-bef8-4861-958a-bee50215f212}", name: "", x: 296.16000000000003, y: 52.966000000000001}
+        filename: scans/sim/conference.png
+        transform:
+          scale: 0.05047938348354427
+          translation_x: 3.154924114447029
+          translation_y: 0.74280302800268538
+          yaw: -0.0019520575266047792
+        visible: true
     measurements:
       - [0, 1, {distance: [3, 13]}]
       - [2, 3, {distance: [3, 10]}]
