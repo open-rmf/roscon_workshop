@@ -15,10 +15,7 @@
 # limitations under the License.
 
 import sys
-import yaml
-import argparse
 from typing import Optional
-from yaml import YAMLObject
 
 import rclpy
 from rclpy.node import Node
@@ -32,13 +29,16 @@ from .DoorAPI import DoorAPI
     as handle incoming requests to control the integrated door, by calling the
     implemented functions in DoorAPI.
 '''
+
+
 class RosconDoorAdapter(Node):
-    def __init__(self, args, config: YAMLObject):
+    def __init__(self):
         super().__init__('roscon_door_adapter')
 
-        self.door_config = config
-        self.door_api = DoorAPI(self.door_config, self.get_logger())
-        self.doors = set(config['doors'])
+        address = self.declare_parameter('manager_address', 'localhost').value
+        port = self.declare_parameter('manager_port', 5002).value
+        self.door_api = DoorAPI(address, port, self.get_logger())
+        self.doors = set()
 
         self.door_state_pub = self.create_publisher(
             DoorState,
@@ -67,11 +67,12 @@ class RosconDoorAdapter(Node):
         pass
 
     def publish_states(self):
+        # self.doors = self.door_api.get_door_names()
         # for door_name in self.doors:
         #     door_state = self._door_state(door_name)
         #     if door_state is None:
         #         self.get_logger().info('No door state received for door '
-        #                 f'{door_name}')
+        #                                f'{door_name}')
         #         continue
         #     self.door_state_pub.publish(door_state)
         pass
@@ -91,18 +92,8 @@ class RosconDoorAdapter(Node):
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='roscon_door_adapter',
-        description='Roscon door adapter')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = RosconDoorAdapter(args, config)
+    node = RosconDoorAdapter()
     rclpy.spin(node)
     rclpy.shutdown()
 
