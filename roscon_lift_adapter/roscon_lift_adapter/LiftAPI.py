@@ -16,10 +16,7 @@
 
 from __future__ import annotations
 
-import enum
-
 import requests
-from yaml import YAMLObject
 from typing import Optional
 
 from rclpy.impl.rcutils_logger import RcutilsLogger
@@ -32,22 +29,22 @@ from rmf_lift_msgs.msg import LiftState
     the LiftAdapter. For example, if your lift has a REST API, you will need to
     make http request calls to the appropriate endpints within these functions.
 '''
+
+
 class LiftAPI:
     # The constructor accepts a safe loaded YAMLObject, which should contain all
     # information that is required to run any of these API calls.
-    def __init__(self, config: YAMLObject, logger: RcutilsLogger):
-        self.config = config
-        self.prefix = 'http://' + config['lift_manager']['ip'] + \
-                ':' + str(config['lift_manager']['port'])
+    def __init__(self, address: str, port: int, logger: RcutilsLogger):
+        self.prefix = 'http://' + address + ':' + str(port)
         self.logger = logger
         self.timeout = 1.0
 
-    def lift_state(self, lift_name) -> Optional[LiftState]:
+    def lift_state(self, lift_name: str) -> Optional[LiftState]:
         ''' Returns the lift state or None if the query failed'''
         try:
             response = requests.get(self.prefix +
-                    f'/open-rmf/demo-lift/lift_state?lift_name={lift_name}',
-                    timeout=self.timeout)
+                                    f'/open-rmf/demo-lift/lift_state?lift_name={lift_name}',
+                                    timeout=self.timeout)
         except Exception as err:
             self.logger.info(f'{err}')
             return None
@@ -63,16 +60,29 @@ class LiftAPI:
         lift_state.destination_floor = res_data['destination_floor']
         return lift_state
 
-    def command_lift(self, lift_name, floor: str, door_state: int) -> bool:
+    def get_lift_names(self) -> Optional[list]:
+        ''' Returns a list of lift names or None if the query failed'''
+        try:
+            response = requests.get(self.prefix +
+                                    '/open-rmf/demo-lift/lift_names',
+                                    timeout=self.timeout)
+        except Exception as err:
+            self.logger.info(f'{err}')
+            return None
+        if response.status_code != 200 or response.json()['success'] is False:
+            return None
+        return response.json()['data']['lift_names']
+
+    def command_lift(self, lift_name: str, floor: str, door_state: int) -> bool:
         ''' Sends the lift cabin to a specific floor and opens all available
             doors for that floor. Returns True if the request was sent out
             successfully, False otherwise'''
         data = {'floor': floor, 'door_state': door_state}
         try:
             response = requests.post(self.prefix +
-                    f'/open-rmf/demo-lift/lift_request?lift_name={lift_name}',
-                    timeout=self.timeout,
-                    json=data)
+                                     f'/open-rmf/demo-lift/lift_request?lift_name={lift_name}',
+                                     timeout=self.timeout,
+                                     json=data)
         except Exception as err:
             self.logger.info(f'{err}')
             return None
