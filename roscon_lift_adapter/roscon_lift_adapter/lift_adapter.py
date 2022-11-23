@@ -15,10 +15,7 @@
 # limitations under the License.
 
 import sys
-import yaml
-import argparse
 from typing import Optional
-from yaml import YAMLObject
 
 import rclpy
 from rclpy.node import Node
@@ -32,17 +29,19 @@ from .LiftAPI import LiftAPI
     as handle incoming requests to control the integrated lift, by calling the
     implemented functions in LiftAPI.
 '''
+
+
 class RosconLiftAdapter(Node):
-    def __init__(self, args, config: YAMLObject):
+    def __init__(self):
         super().__init__('roscon_lift_adapter')
 
         self.lift_states = {}
         self.lift_requests = {}
-        self.lift_config = config
-        self.lift_api = LiftAPI(self.lift_config, self.get_logger())
-        for lift in config['lifts']:
-            self.lift_requests[lift] = None
-            self.lift_states[lift] = self._lift_state(lift)
+
+        address = self.declare_parameter('manager_address', 'localhost').value
+        port = self.declare_parameter('manager_port', 5003).value
+
+        self.lift_api = LiftAPI(address, port, self.get_logger())
 
         self.lift_state_pub = self.create_publisher(
             LiftState,
@@ -59,7 +58,11 @@ class RosconLiftAdapter(Node):
 
     def update_callback(self):
         new_states = {}
-        for lift_name, lift_state in self.lift_states.items():
+        lift_names = self.lift_api.get_lift_names()
+        for lift_name in lift_names:
+            if lift_name not in self.lift_requests:
+                self.lift_requests[lift_name] = None
+
             new_state = self._lift_state(lift_name)
             new_states[lift_name] = new_state
             if new_state is None:
@@ -86,14 +89,14 @@ class RosconLiftAdapter(Node):
 
         lift_state = self.lift_api.lift_state(lift_name)
         if lift_state is None:
-            self.get_logger().error(f'Unable to retrieve lift state')
+            self.get_logger().error('Unable to retrieve lift state')
             return None
 
         new_state.available_floors = lift_state.available_floors
         new_state.current_floor = lift_state.current_floor
         new_state.destination_floor = lift_state.destination_floor
-        new_state.door_state= lift_state.door_state
-        new_state.motion_state= lift_state.motion_state
+        new_state.door_state = lift_state.door_state
+        new_state.motion_state = lift_state.motion_state
 
         new_state.available_modes = [LiftState.MODE_HUMAN, LiftState.MODE_AGV]
         new_state.current_mode = LiftState.MODE_AGV
@@ -111,7 +114,7 @@ class RosconLiftAdapter(Node):
         for lift_name, lift_state in self.lift_states.items():
             if lift_state is None:
                 self.get_logger().info('No lift state received for lift '
-                        f'{lift_name}')
+                                       f'{lift_name}')
                 continue
             self.lift_state_pub.publish(lift_state)
 
@@ -139,23 +142,13 @@ class RosconLiftAdapter(Node):
             return
 
         self.get_logger().info(f'Requested lift {msg.lift_name} '
-                f'to {msg.destination_floor}.')
+                               f'to {msg.destination_floor}.')
         self.lift_requests[msg.lift_name] = msg
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='roscon_lift_adapter',
-        description='Roscon lift adapter')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = RosconLiftAdapter(args, config)
+    node = RosconLiftAdapter()
     rclpy.spin(node)
     rclpy.shutdown()
 
