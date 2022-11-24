@@ -122,6 +122,7 @@ levels:
       - {dispensable: false, model_name: OpenRobotics/OfficeChairBlack, name: OpenRobotics/OfficeChairBlack, static: true, x: 563.77300000000002, y: 1006.146, yaw: 3.1415999999999999, z: 0}
       - {dispensable: false, model_name: OpenRobotics/OfficeChairBlack, name: OpenRobotics/OfficeChairBlack, static: true, x: 607.66099999999994, y: 1006.514, yaw: 3.1415999999999999, z: 0}
       - {dispensable: false, model_name: OpenRobotics/OfficeChairBlack, name: OpenRobotics/OfficeChairBlack, static: true, x: 643.06700000000001, y: 1006.883, yaw: 3.1415999999999999, z: 0}
+      - {dispensable: false, model_name: OpenRobotics/Standing person, name: OpenRobotics/Standing person, static: true, x: 314.947, y: 553.28300000000002, yaw: 0.19939999999999999, z: 0}
       - {dispensable: false, model_name: OpenRobotics/AdjTable, name: OpenRobotics/AdjTable, static: true, x: 346.68099999999998, y: 583.86500000000001, yaw: 0.2011, z: 0}
       - {dispensable: false, model_name: OpenRobotics/MaleVisitorOnPhone, name: OpenRobotics/MaleVisitorOnPhone, static: true, x: 346.16500000000002, y: 546.798, yaw: -1.2331000000000001, z: 0}
       - {dispensable: false, model_name: OpenRobotics/OfficeChairGrey, name: OpenRobotics/OfficeChairGrey, static: true, x: 372.125, y: 548.99300000000005, yaw: 0.15260000000000001, z: 0}
