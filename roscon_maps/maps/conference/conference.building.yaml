@@ -1,0 +1,11 @@
+coordinate_system: reference_image
+graphs:
+  {}
+levels:
+  L1:
+    drawing:
+      filename: conference.png
+    elevation: 0
+    features:
+
+name: workshop
