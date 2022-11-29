@@ -20,6 +20,9 @@ levels:
       - {ids: ["{7ced8c69-e679-4249-b703-630c206bf0b8}", "{dbb0fa6a-daf1-4743-88a0-12c55a2f68ac}"]}
       - {ids: ["{9323c16c-0cce-41fc-81bf-ad3ecfea04a1}", "{9bb27be9-9b40-48ef-8465-5a77b75cc90d}"]}
       - {ids: ["{733add4a-bef8-4861-958a-bee50215f212}", "{6cee94a1-2acb-4078-908b-47206c0379d9}"]}
+      - {ids: ["{34c43e37-23b3-4477-92e8-33431980daf5}", "{b3c01bd7-e35e-4a5e-a055-8ed386e0c895}"]}
+      - {ids: ["{1912555f-9c6d-4fba-864a-aa2cd43c305c}", "{780afefa-fcf4-4686-ad4e-15882081dd24}"]}
+      - {ids: ["{6e1d8ac8-6d67-46b1-bf41-8259a6f8a517}", "{51e27919-545c-4b82-b3c8-a731ce485008}"]}
     doors:
       - [19, 20, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, door_1], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, double_hinged]}]
     drawing:
@@ -29,6 +32,9 @@ levels:
       - {id: "{dbb0fa6a-daf1-4743-88a0-12c55a2f68ac}", name: "", x: 268.56200000000001, y: 582.58299999999997}
       - {id: "{9323c16c-0cce-41fc-81bf-ad3ecfea04a1}", name: "", x: 696.01900000000001, y: 1117.2819999999999}
       - {id: "{6cee94a1-2acb-4078-908b-47206c0379d9}", name: "", x: 929.32000000000005, y: 628.55200000000002}
+      - {id: "{34c43e37-23b3-4477-92e8-33431980daf5}", name: "", x: 755.971, y: 495.31599999999997}
+      - {id: "{780afefa-fcf4-4686-ad4e-15882081dd24}", name: "", x: 300.411, y: 498.27300000000002}
+      - {id: "{6e1d8ac8-6d67-46b1-bf41-8259a6f8a517}", name: "", x: 357.161, y: 1143.0640000000001}
     fiducials:
       - [300.35500000000002, 496.166, f1]
       - [755.06799999999998, 495.733, f2]
@@ -74,6 +80,11 @@ levels:
       - [33, 27, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
       - [30, 31, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
       - [46, 48, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [26, 27, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [26, 60, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [60, 29, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [27, 60, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [60, 28, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
     layers:
       sim_scan:
         color: [1, 0, 0, 0.5]
@@ -83,10 +94,23 @@ levels:
           - {id: "{733add4a-bef8-4861-958a-bee50215f212}", name: "", x: 296.16000000000003, y: 52.966000000000001}
         filename: scans/sim/conference.png
         transform:
-          scale: 0.050479400000000001
-          translation_x: 3.1549999999999998
-          translation_y: 9.5429999999999993
-          yaw: -0.001954768762233649
+          scale: 0.050479279530633442
+          translation_x: 3.1549378838401552
+          translation_y: 9.5060790724014392
+          yaw: -0.0019519489762661367
+        visible: true
+      tb_scan:
+        color: [0.38, 0.20799999999999999, 0.51400000000000001, 0.5]
+        features:
+          - {id: "{b3c01bd7-e35e-4a5e-a055-8ed386e0c895}", name: "", x: 0.92100000000000004, y: 278.44}
+          - {id: "{1912555f-9c6d-4fba-864a-aa2cd43c305c}", name: "", x: 24.292000000000002, y: 413.185}
+          - {id: "{51e27919-545c-4b82-b3c8-a731ce485008}", name: "", x: 278.34699999999998, y: 385.02199999999999}
+        filename: ../../../../../../conference.png
+        transform:
+          scale: 0.051040001088428454
+          translation_x: 27.973731208466088
+          translation_y: 10.971831574948508
+          yaw: -1.6939638263823296
         visible: true
     measurements:
       - [0, 1, {distance: [3, 13]}]
@@ -153,16 +177,16 @@ levels:
       - [930.04300000000001, 1127.3779999999999, 0, ""]
       - [754.91099999999994, 615.83000000000004, 0, ""]
       - [754.89400000000001, 729.88900000000001, 0, ""]
-      - [453.27300000000002, 542.625, 0, charger_1, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, tinyrobot1], spawn_robot_type: [1, TinyRobot]}]
-      - [487.17599999999999, 601.06299999999999, 0, ""]
-      - [658.88400000000001, 565.38599999999997, 0, ""]
-      - [486.70299999999997, 669.04499999999996, 0, p1]
+      - [440.40199999999999, 560.98800000000006, 0, charger_1, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, tinyrobot1], spawn_robot_type: [1, TinyRobot]}]
+      - [440.40199999999999, 603.51400000000001, 0, a]
+      - [664.09799999999996, 579.04700000000003, 0, b]
+      - [445.40899999999999, 670.94000000000005, 0, p1]
       - [608.029, 668.02300000000002, 0, p2]
       - [486.21699999999998, 802.077, 0, p5]
       - [485.76299999999998, 929.40899999999999, 0, p10]
       - [485.28899999999999, 1062.5889999999999, 0, p15]
-      - [715.13, 563.59100000000001, 0, charger_2, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, tinyrobot2], spawn_robot_type: [1, TinyRobot]}]
-      - [680.96500000000003, 667.40800000000002, 0, ""]
+      - [656.71500000000003, 529.30200000000002, 0, charger_2, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, tinyrobot2], spawn_robot_type: [1, TinyRobot]}]
+      - [680.96500000000003, 667.40800000000002, 0, d]
       - [803.83199999999999, 669.75400000000002, 0, ""]
       - [708.37099999999998, 802.346, 0, p7]
       - [703.81700000000001, 929.51599999999996, 0, p12]
@@ -188,6 +212,7 @@ levels:
       - [857.45500000000004, 973.44500000000005, 0, ""]
       - [928.66099999999994, 972.40899999999999, 0, ""]
       - [826, 1037.741, 0, "", {lift_cabin: [1, lift]}]
+      - [545.83900000000006, 623.73800000000006, 0, c]
     walls:
       - [4, 5, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
       - [6, 7, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]

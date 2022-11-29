@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 
 <launch>
-  <arg name="use_sim_time" default="true"/>
+  <arg name="use_sim_time" default="false"/>
   <arg name="run_adapters" default="true"/>
   <arg name="easy_fleet" default="true" description="Set to true if using the EasyFullControl fleet adapter"/>
   <arg name="map_name" default="workshop"/>

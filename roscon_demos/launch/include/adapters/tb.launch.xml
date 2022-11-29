@@ -47,6 +47,7 @@
       <arg name="perform_loop" value="true"/>
       <!-- Whether it can perform cleaning -->
       <arg name="perform_cleaning" value="false"/>
+      <arg name="reversible" value="false"/>
 
       <!-- TODO Update these values with actual specs -->
       <!-- Battery parameters -->
