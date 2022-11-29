@@ -13,7 +13,9 @@ crowd_sim:
   transitions: []
   update_time_step: 0.10000000000000001
 graphs:
-  {}
+  0:
+    default_lane_width: 1
+    name: ""
 levels:
   L1:
     constraints:
@@ -27,6 +29,7 @@ levels:
       - [44, 45, {motion_axis: [1, end], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, green_room_door], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, hinged]}]
       - [61, 62, {motion_axis: [1, end], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, side_room_door], plugin: [1, none], right_left_ratio: [3, 1], type: [1, hinged]}]
       - [67, 63, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, -1], name: [1, bottom_stairs_door], plugin: [1, none], right_left_ratio: [3, 1], type: [1, double_hinged]}]
+      - [136, 137, {motion_axis: [1, start], motion_degrees: [3, 90], motion_direction: [2, 1], name: [1, door], plugin: [1, normal], right_left_ratio: [3, 1], type: [1, hinged]}]
     drawing:
       filename: conference_room_b1.png
     elevation: 0
@@ -361,6 +364,8 @@ levels:
       - [1049.8979999999999, 1654.845, 0, lounge]
       - [804.55399999999997, 1198.4190000000001, 0, ""]
       - [525.12099999999998, 1358.26, 0, ""]
+      - [624.85799999999995, 271.94900000000001, 0, ""]
+      - [624.85799999999995, 347.577, 0, ""]
     walls:
       - [0, 1, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
       - [1, 2, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
@@ -510,3 +515,5 @@ lifts:
     y: 1155
     yaw: 0
 name: workshop
+parameters:
+  default_vertex_radius: [3, 10]

@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 
 <launch>
-  <arg name="use_sim_time" default="true"/>
+  <arg name="use_sim_time" default="false"/>
   <arg name="map_name" default="workshop_example"/>
   <arg name="nav_graph_file" default="$(find-pkg-share roscon_maps)/maps/$(var map_name)/nav_graphs/0.yaml" />
   <arg name="fleet_name" default="tb4"/>
