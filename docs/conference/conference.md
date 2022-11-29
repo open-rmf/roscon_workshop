@@ -1,11 +1,8 @@
 
-# roscon_workshop
-Materials for Open-RMF workshop at ROSCon 2022 Kyoto.
-See guide [here](docs/conference/conference.md) for workshop at a conference.
+# Open-RMF workshop: Conference
+Materials for Open-RMF workshop.
 
-![](docs/workshop.png)
-
-Download the VirtualBox image [here](https://www.dropbox.com/sh/d82fy5aqdshiqws/AADph3wt7jsyt6LpLoiJR9Rqa?dl=0).
+![](workshop.png)
 
 ## Overview
 The goal of this workshop is to guide participants through the process of
@@ -26,7 +23,7 @@ The sections below contain relevant launch instructions for each milestone.
 ## Floor plan annotation
 After annotation your floor plan in `rmf_traffic_editor` might look like this.
 It is perfectly okay if it looks different. Creativity is welcome!
-![](docs/example_annotation.png)
+![](example_annotation.png)
 
 Build the workspace.
 ```bash
@@ -39,33 +36,31 @@ Launch the auto-generated digital twin in `gazebo-classic`
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 launch roscon_gz_classic workshop.launch.xml run_adapters:=false map_name:=workshop_example
+ros2 launch roscon_gz_classic workshop.launch.xml run_adapters:=false map_name:=conference
 ```
 
 ## Fleet integration with Open-RMF
-![](docs/test_fleet_adapter.png)
+![](test_fleet_adapter.png)
 
 Launch the demo world. You should now be able to see the schedule and fleet
 state markers in RViz for each robot.
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 launch roscon_gz_classic workshop.launch.xml
+ros2 launch roscon_gz_classic workshop.launch.xml map_name:=conference
 ```
 Then send a couple of patrolling tasks to Open-RMF.
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 run rmf_demos_tasks dispatch_patrol -p p2 p4 p6 -n 3 --use_sim_time
-ros2 run rmf_demos_tasks dispatch_patrol -p p4 p5 p8 -n 3 --use_sim_time
+ros2 run rmf_demos_tasks dispatch_patrol -p p0 p5 p15 p17 -n 3 --use_sim_time
+ros2 run rmf_demos_tasks dispatch_patrol -p p13 p15 p1 p7 -n 3 --use_sim_time
 ```
 > Note: You may see some errors from the lift and door adapters but this okay,
 we will implement them shortly.
 
-ros2 run rmf_demos_tasks dispatch_patrol -p p4 p5 p8 -n 3 --use_sim_time
-
 ## Door integration with Open-RMF
-![](docs/test_door_adapter.png)
+![](test_door_adapter.png)
 
 Launch the demo world. You should now be able to see the door states in RViz.
 You can also use the `DoorPanel` to manually open/close doors to test the
@@ -73,7 +68,7 @@ adapter.
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 launch roscon_gz_classic workshop.launch.xml
+ros2 launch roscon_gz_classic workshop.launch.xml map_name:=conference
 ```
 
 Request a robot to go outside. Open-RMF will automatically request the integrated
@@ -81,18 +76,18 @@ door to open and close as the robot passes through.
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 run rmf_demos_tasks dispatch_patrol -p snack_bar --use_sim_time
+ros2 run rmf_demos_tasks dispatch_patrol -p hallway --use_sim_time
 ```
 
 ## Lift integration with Open-RMF
-![](docs/test_lift_adapter.png)
+![](test_lift_adapter.png)
 
 Launch the demo world. You should now be able to see the lift states in RViz.
 You can also use the `Lift` to manually command the lift.
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 launch roscon_gz_classic workshop.launch.xml
+ros2 launch roscon_gz_classic workshop.launch.xml map_name:=conference
 ```
 
 Request a robot to go to `L2`. Open-RMF will automatically request the integrated
@@ -102,18 +97,18 @@ the robot transitions.
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 run rmf_demos_tasks dispatch_patrol -p balcony_1 --use_sim_time
+ros2 run rmf_demos_tasks dispatch_patrol -p room_2 --use_sim_time
 ```
 
 ## Launching with rmf-web dashboard
-![](docs/dashboard.png)
+![](dashboard.png)
 
 Launch the demo world with the additional `server_uri` launch argument. This allows the fleet adapter to communicate with the `api-server`.
 
 ```bash
 cd ~/roscon_ws
 source install/setup.bash
-ros2 launch roscon_gz_classic workshop.launch.xml server_uri:="ws://localhost:8000/_internal"
+ros2 launch roscon_gz_classic workshop.launch.xml map_name:=conference server_uri:="ws://localhost:8000/_internal"
 ```
 
 The simulation will warn that the client is not connected. Next, we launch the `api-server`, which will make that warning go away, and an acknowledgement that it has been connected.

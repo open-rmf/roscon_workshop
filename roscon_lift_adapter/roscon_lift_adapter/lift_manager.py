@@ -17,9 +17,6 @@
 import sys
 import threading
 
-import argparse
-import yaml
-
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_system_default
@@ -33,14 +30,17 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+
 class Request(BaseModel):
     floor: str
     door_state: int
+
 
 class Response(BaseModel):
     data: Optional[dict] = None
     success: bool
     msg: str
+
 
 '''
     The LiftManager class simulates a bridge between the lift API, that
@@ -48,15 +48,18 @@ class Response(BaseModel):
     simulated lifts that operate using ROS2 messages.
     Users can use this lift to validate their lift adapter in simulation
 '''
+
+
 class LiftManager(Node):
 
-    def __init__(self, lifts, namespace='sim'):
+    def __init__(self, namespace='sim'):
         super().__init__('lift_manager')
 
+        self.address = self.declare_parameter('manager_address', 'localhost').value
+        self.port = self.declare_parameter('manager_port', 5003).value
+
         self.lift_states = {}
-        for lift in lifts:
-            self.lift_states[lift] = None
-        
+
         # Setup publisher and subscriber
         self.lift_request_pub = self.create_publisher(
             LiftRequest,
@@ -70,7 +73,7 @@ class LiftManager(Node):
             qos_profile=qos_profile_system_default)
 
         @app.get('/open-rmf/demo-lift/lift_state',
-                response_model=Response)
+                 response_model=Response)
         async def state(lift_name: str):
             response = {
                 'data': {},
@@ -79,13 +82,10 @@ class LiftManager(Node):
             }
 
             if lift_name not in self.lift_states:
-                self.get_logger().warn('Lift not being managed')
+                self.get_logger().warn(f'Lift {lift_name} not being managed')
                 return response
 
             state = self.lift_states[lift_name]
-            if state is None:
-                self.get_logger().warn('Lift state not received')
-                return response
 
             response['data']['available_floors'] = state.available_floors
             response['data']['current_floor'] = state.current_floor
@@ -95,8 +95,21 @@ class LiftManager(Node):
             response['success'] = True
             return response
 
+        @app.get('/open-rmf/demo-lift/lift_names',
+                 response_model=Response)
+        async def lift_names():
+            response = {
+                'data': {},
+                'success': False,
+                'msg': ''
+            }
+
+            response['data']['lift_names'] = [name for name in self.lift_states]
+            response['success'] = True
+            return response
+
         @app.post('/open-rmf/demo-lift/lift_request',
-                response_model=Response)
+                  response_model=Response)
         async def request(lift_name: str, floor: Request):
             req = LiftRequest()
             response = {
@@ -106,10 +119,10 @@ class LiftManager(Node):
             }
 
             if lift_name not in self.lift_states:
-                self.get_logger().warn('Lift not being managed')
+                self.get_logger().warn(f'Lift {lift_name} not being managed')
                 return response
 
-            now =  self.get_clock().now()
+            now = self.get_clock().now()
             req.lift_name = lift_name
             req.request_time = now.to_msg()
             req.request_type = req.REQUEST_AGV_MODE
@@ -122,32 +135,20 @@ class LiftManager(Node):
             return response
 
     def lift_state_cb(self, msg):
-        if msg.lift_name not in self.lift_states:
-            return
         self.lift_states[msg.lift_name] = msg
 
 
 def main(argv=sys.argv):
-    args_without_ros = rclpy.utilities.remove_ros_args(argv)
-    parser = argparse.ArgumentParser(
-        prog='lift_manager',
-        description='Demo lift manager')
-    parser.add_argument('-c', '--config', required=True, type=str)
-    args = parser.parse_args(args_without_ros[1:])
-
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
     rclpy.init()
-    node = LiftManager(config['lifts'])
+    node = LiftManager()
 
     spin_thread = threading.Thread(target=rclpy.spin, args=(node,))
     spin_thread.start()
 
     uvicorn.run(app,
-            host=config['lift_manager']['ip'],
-            port=config['lift_manager']['port'],
-            log_level='warning')
+                host=node.address,
+                port=node.port,
+                log_level='warning')
 
     rclpy.shutdown()
 
