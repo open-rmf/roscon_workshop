@@ -5,6 +5,8 @@ See guide [here](docs/conference/conference.md) for workshop at a conference.
 
 ![](docs/workshop.png)
 
+Read through the [preparation document for this workshop](https://drive.google.com/file/d/1jWj1o_WbVGn6mk7BOqoVCJKciI6vymqw/view?usp=sharing).
+
 Download the VirtualBox image [here](https://drive.google.com/file/d/1_a6q_9ggtrBtlA7Fghw5iYWkVrWlapDV/view?usp=sharing).
 
 ## Overview
